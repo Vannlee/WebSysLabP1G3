@@ -1,0 +1,36 @@
+section h2 {
+    text-decoration: underline;
+}
+
+figure {
+    display: inline-block;
+}
+
+article figure img{
+    border-color: whitesmoke;
+    border-style: outset;
+    border-width: 5px;
+    border-radius: 2%;
+}
+
+figcaption{
+    color: gray;
+    font-style: italic;
+    text-align: center;
+}
+
+.img-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    max-width: 100%;
+    height: auto;
+    transform: translate(-50%, -50%);
+}
+
+footer {
+    border-top: 3px solid gray;
+    font-size: small;
+    font-style: italic;
+    text-align: center;
+}
