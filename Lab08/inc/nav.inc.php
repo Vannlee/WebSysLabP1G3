@@ -1,7 +1,7 @@
  <!-- navigation bar -->
  <nav class="navbar navbar-expand-lg bg-secondary" data-bs-theme="dark">
     <a class="navbar-brand" href="index.php">
-        <img src="images/this_is_fine.gif" alt="this is fine" title="World of Pets" width="100"/>
+        <img src="images/gym-logo.png" alt="this is fine" title="World of Pets" width="110"/>
     </a>
     
     <ul class="navbar-nav ms-auto">
