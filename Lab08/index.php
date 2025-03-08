@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>World of Pets</title>
+        <title>Fitness Gym</title>
         <?php
             include "inc/head.inc.php";
         ?>
