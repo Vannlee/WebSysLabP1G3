@@ -20,6 +20,12 @@
     }
     else {
         $lname = sanitize_input($_POST["lname"]);
+        // Check if last name contains only letters
+        if (!preg_match("/^[A-Za-z]+$/", $lname)) {
+            $errorMsg .= "Last name must contain only letters.<br>";
+            $success = false;
+        }
+
     }
 
     // email validation
@@ -57,6 +63,11 @@
             $errorMsg .= "Passwords do not match.<br>";
             $success = false;
         }
+    }
+    // Check if the user agreed to the terms
+    if (empty($_POST["agree"])) {
+    $errorMsg .= "You must agree to the terms and conditions.<br>";
+    $success = false;
     }
 
     if ($success) {
