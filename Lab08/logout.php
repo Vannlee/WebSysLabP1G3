@@ -1,0 +1,27 @@
+<?php
+session_start();
+session_destroy();
+
+// Remove Remember Me Cookie
+setcookie("remember_me", "", time() - 3600, "/", "", true, true);
+
+// Remove token from database
+$config = parse_ini_file('/var/www/private/db-config.ini');
+$conn = new mysqli($config['servername'], $config['username'], $config['password'], $config['dbname']);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+if (isset($_COOKIE["remember_me"])) {
+    $token_hash = hash("sha256", $_COOKIE["remember_me"]);
+    $stmt = $conn->prepare("DELETE FROM login_tokens WHERE token_hash=?");
+    $stmt->bind_param("s", $token_hash);
+    $stmt->execute();
+    $stmt->close();
+}
+
+$conn->close();
+header("Location: login.php");
+exit();
+?>

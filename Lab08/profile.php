@@ -1,6 +1,7 @@
 <?php
 session_start();
 ob_start();
+include "session_start.php";
 include "inc/head.inc.php";
 include "inc/nav.inc.php";
 

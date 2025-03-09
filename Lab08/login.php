@@ -28,6 +28,10 @@
                     <input required type="password" id="pwd" name="pwd" class="form-control"
                         placeholder="Enter password">
                 </div>
+                <div class="mb-3 form-check">
+                <input type="checkbox" id="remember" name="remember" class="form-check-input">
+                <label for="remember" class="form-check-label">Remember Me</label>
+                </div>
                 <div class="mb-3">
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
