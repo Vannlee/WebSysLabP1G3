@@ -1,4 +1,4 @@
 <!-- footer -->
 <footer class="container">
-    <p>Copyright &copy; 2023 World of Pets Pte. Ltd.</p>
+    <p>Copyright &copy; 2025 GymBros Pte. Ltd. by P1G3</p>
 </footer>
