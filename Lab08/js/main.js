@@ -9,7 +9,9 @@ function registerEventListeners() {
     if (thumbnails !== null && thumbnails.length > 0) {
         for (var index = 0; index < thumbnails.length; index++) {
             var thumbnail = thumbnails[index];
-            thumbnail.addEventListener("click", displayLargerPicture);
+            thumbnail.addEventListener("click", displayModal);
+            //     function() {
+            // });
         }
     }
     else {
@@ -17,20 +19,66 @@ function registerEventListeners() {
     }
 }
 
-function displayLargerPicture(image) {
-        var popupId = image.target.alt;
-        var popup = document.getElementById(popupId);
+function displayModal(image) {
+    var image_path = image.target.src;
+    var popupId = image.target.alt;
+    var popup = document.getElementById(popupId);
+    var location = image.target.getAttribute('location');
+    var hours = image.target.getAttribute('hours');
+    var contact = image.target.getAttribute('contact');
 
-        if (popup == null) {
-            popup = document.createElement("span");
-            popup.id = popupId;
-            popup.setAttribute("class", "img-popup");
-            popup.innerHTML = "<img src=\"images/" + popupId + "_large.jpg\">"
-            image.target.insertAdjacentElement("afterend", popup);
-        }
-        else {
+    // If modal exists, remove it
+    if (popup == null) {
+        // Create modal container
+        popup = document.createElement("div");
+        popup.id = popupId;
+        popup.setAttribute("class", "modal");
+
+        // Create modal content
+        var modalContent = document.createElement("div");
+        modalContent.setAttribute("class", "modal-content");
+
+        // Create close button
+        var closeButton = document.createElement("span");
+        closeButton.setAttribute("class", "close-button");
+        closeButton.innerHTML = "&times;";
+        closeButton.addEventListener("click", function() {
             popup.remove();
-        }
+        });
+
+        // Create image element
+        var imgElement = document.createElement("img");
+        imgElement.src = image_path;
+        imgElement.setAttribute("class", "modal-image");
+
+        // Create text container for gym information
+        var infoContainer = document.createElement("div");
+        infoContainer.setAttribute("class", "modal-text");
+        infoContainer.innerHTML = `
+        <h2>${popupId}</h2>
+        <p>Location: ${location}<br>
+        Hours: ${hours}<br>
+        Contact Number: ${contact}</p>`;
+
+        // Create button to redirect to booking page
+        var bookingButton = document.createElement("button");
+        bookingButton.textContent = "Book Now";
+        bookingButton.setAttribute("class", "btn btn-success");
+        bookingButton.addEventListener("click", function() {
+            window.location.href = "booking.php";
+        })
+
+        // Append elements
+        infoContainer.appendChild(bookingButton);
+        modalContent.appendChild(closeButton);
+        modalContent.appendChild(imgElement);
+        modalContent.appendChild(infoContainer);
+        popup.appendChild(modalContent);
+        document.body.appendChild(popup);
+    }
+    else {
+        popup.remove();
+    }
 }
 
 /*
