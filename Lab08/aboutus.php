@@ -12,18 +12,14 @@
         ?>
 
         <main class="container">
-            <section id="aboutus">
-                <h1>About Us</h1>
+            <div>
+                <h1 style="text-align:center;">About Us</h1>
                 <p>
-                    Fitness Gym is a chain of gyms located in various parts of Singapore. We aim to provide a comfortable and affordable gym experience for all our members. Our gyms are equipped with the latest gym equipment and our trainers are certified professionals who are always ready to help you achieve your fitness goals.
+                    Fitness Gym is a gym that is dedicated to helping you achieve your fitness goals. We have a wide range of classes and instructors to help you get started on your fitness journey. Our gym is equipped with the latest equipment and technology to help you track your progress and stay motivated. Whether you are a beginner or an experienced athlete, we have something for everyone. Come join us and start your fitness journey today!
                 </p>
                 <p>
-                    We offer a wide range of classes to cater to different fitness levels and interests. Whether you are a beginner looking to get started on your fitness journey or an experienced gym-goer looking to take your workouts to the next level, we have something for everyone.
-                </p>
-                <p>
-                    At Fitness Gym, we believe that fitness should be fun and enjoyable. That's why we have created a welcoming and inclusive environment where everyone is welcome. So come join us and start your fitness journey today!
-                </p>
-            </section>
+                    <img src="images/this_is_fine.gif" alt="Fitness Gym" title="Fitness Gym" height = "300" width="500"/>
+            </div>
         </main>
         <?php
             include "inc/footer.inc.php";
