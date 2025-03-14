@@ -9,7 +9,6 @@
     <body>
         <?php
             include "inc/nav.inc.php";
-            include "inc/jumbotron.inc.php";
         ?>
 
         <main class="container">
