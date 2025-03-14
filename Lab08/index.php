@@ -64,67 +64,70 @@
         </div>
 
         <main class="container">
-            <!-- dogs section -->
-            <section id="dogs">
-                <h2>All About Dogs!</h2>
+            <!-- Northeast section -->
+            <section id="northeast">
+                <h2>Northeast Locations</h2>
                 <div class ="row">
                 <article class="col-sm">
-                    <h3>Poodles</h3>
                     <figure>
-                        <img class="img-thumbnail" src="images/poodle_small.jpg" alt="poodle"
-                            title="View larger image..."/>
-                        <figcaption>Standard Poodle</figcaption>
+                        <img class="img-thumbnail" src="images/sengkang_branch.jpg" 
+                            alt="Sengkang GymBro Branch" title="Click to make a booking"
+                            location="Anchorvale Road, #123" hours="07:00 - 22:00"
+                            contact="61234567"/>
+                        <figcaption>Sengkang GymBro Branch</figcaption>
                     </figure>
-                    <p>
-                        Poodles are a group of formal dog breeds, the Standard
-                        Poodle, Miniature Poodle and Toy Poodle.
-                    </p>
                 </article>
                 <article class="col-sm">
-                    <h3>Chihuahua</h3>
                     <figure>
-                        <img class="img-thumbnail" src="images/chihuahua_small.jpg" alt="chihuahua"
-                            title="View larger image..."/>
-                        <figcaption>Standard Chihuahua</figcaption>
+                        <img class="img-thumbnail" src="images/hougang_branch.jpg" 
+                            alt="Hougang GymBro Branch" title="Click to make a booking"
+                            location="Hougang Ave 68, #456" hours="06:00 - 23:00"
+                            contact="98765432"/>
+                        <figcaption>Hougang GymBro Branch</figcaption>
                     </figure>
-                    <p>
-                        The Chihuahua is the smallest breed of dog, and is named
-                        after the Mexican state of Chihuahua.
-                    </p>
+                </article>
+                <article class="col-sm">
+                    <figure>
+                        <img class="img-thumbnail" src="images/punggol_branch.jpg" 
+                            alt="Punggol GymBro Branch" title="Click to make a booking"
+                            location="Teck Lee LRT" hours="09:00 - 00:00"
+                            contact="99996666"/>
+                        <figcaption>Punggol GymBro Branch</figcaption>
+                    </figure>
                 </article>
                 </div>
             </section>
 
-            <!-- cats section -->
-            <section id="cats">
-                <h2>All About Cats!</h2>
-                <div class="row">
+            <!-- Southwest section -->
+            <section id="southwest">
+                <h2>Southwest Locations</h2>
+                <div class ="row">
                 <article class="col-sm">
-                    <h3>Tabby</h3>
                     <figure>
-                        <img class="img-thumbnail" src="images/tabby_small.jpg" alt="tabby"
-                            title="View larger image..."/>
-                        <figcaption>Standard Tabby</figcaption>
+                        <img class="img-thumbnail" src="images/cck_branch.jpg" 
+                            alt="Choa Chu Kang GymBro Branch" title="Click to make a booking"
+                            location="Choa Chu Kang Central, #999" hours="05:00 - 21:00"
+                            contact="66669999"/>
+                        <figcaption>Choa Chu Kang GymBro Branch</figcaption>
                     </figure>
-                    <p>
-                        A tabby is any domestic cat (Felis catus) with a distinctive
-                        'M' shaped marking on its forehead, stripes by its eyes 
-                        and across its checks. 
-                    </p>
                 </article>
                 <article class="col-sm">
-                    <h3>Calico</h3>
                     <figure>
-                        <img class="img-thumbnail" src="images/calico_small.jpg" alt="calico"
-                            title="View larger image..."/>
-                        <figcaption>Standard Calico</figcaption>
+                        <img class="img-thumbnail" src="images/batok_branch.jpg" 
+                            alt="Bukit Batok GymBro Branch" title="Click to make a booking"
+                            location="Bukit Batok West Ave 46, #009" hours="07:00 - 23:00"
+                            contact="64447888"/>
+                        <figcaption>Bukit Batok GymBro Branch</figcaption>
                     </figure>
-                    <p>
-                        A calico cat is a domestic cat of any breed with a tri-
-                        color coat. The calico cat is most commonly thought of 
-                        as being typically 25% to 75% white with large orange 
-                        and black patches.
-                    </p>
+                </article>
+                <article class="col-sm">
+                    <figure>
+                        <img class="img-thumbnail" src="images/jr_west_branch.jpg" 
+                            alt="jurong West GymBro Branch" title="Click to make a booking"
+                            location="Joo Koon Road, #666" hours="04:00 - 21:00"
+                            contact="90000001"/>
+                        <figcaption>Jurong West GymBro Branch</figcaption>
+                    </figure>
                 </article>
                 </div>
             </section>
