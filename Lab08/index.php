@@ -11,7 +11,7 @@
             include "inc/nav.inc.php";
             include "inc/carousel.inc.php";
         ?>
-        <main class="container">
+        <main class="container" id="locations">
             <!-- Northeast section -->
             <section id="northeast">
                 <h2>Northeast Locations</h2>
