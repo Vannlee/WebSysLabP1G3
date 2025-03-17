@@ -84,6 +84,9 @@
                 </div>
             </section>
         </main>
+        <noscript>
+            <p style="color: red;">JavaScript is disabled in your browser. Please enable it for the best experience.</p>
+        </noscript>
         <?php
             include "inc/footer.inc.php";
         ?>
