@@ -105,18 +105,31 @@ function authenticateUser() {
                     if ($remember) {
                         $token = bin2hex(random_bytes(32)); // Generate secure token
                         $token_hash = hash("sha256", $token); // Hash before storing
-
-                        // Store token in database
+                    
+                        // Debugging: Check values before inserting
+                        error_log("Debug: Storing remember me token for user_id: " . $user_id);
+                    
+                        // Store token in database with error handling
                         $stmt = $conn->prepare("INSERT INTO login_tokens (user_id, token_hash, expires_at) 
                                                 VALUES (?, ?, DATE_ADD(NOW(), INTERVAL 30 DAY)) 
                                                 ON DUPLICATE KEY UPDATE token_hash=?, expires_at=DATE_ADD(NOW(), INTERVAL 30 DAY)");
+                    
+                        if (!$stmt) {
+                            error_log("Debug: Prepare failed - " . $conn->error);
+                        }
+                    
                         $stmt->bind_param("iss", $user_id, $token_hash, $token_hash);
-                        $stmt->execute();
+                    
+                        if (!$stmt->execute()) {
+                            error_log("Debug: Execute failed - " . $stmt->error);
+                        }
+                    
                         $stmt->close();
-
+                    
                         // Set HTTP-only, secure cookie
                         setcookie("remember_me", $token, time() + (86400 * 30), "/", "", true, true);
                     }
+                    
                 } else {
                     $errorMsg = "Email not found or password doesn't match.";
                     $success = false;
