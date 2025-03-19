@@ -1,5 +1,6 @@
 <?php
 session_start();
+ob_start(); // Prevents "headers already sent" errors
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
