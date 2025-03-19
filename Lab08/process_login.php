@@ -86,7 +86,8 @@ function authenticateUser() {
             $success = false;
         } else {
             // Prepare the statement:
-            $stmt = $conn->prepare("SELECT id, fname, lname, password FROM world_of_pets_members WHERE email=?");
+            $stmt = $conn->prepare("SELECT id, fname, lname, password FROM gymbros_members WHERE email=?");
+
             
             // Bind & execute the query statement:
             $stmt->bind_param("s", $email);
