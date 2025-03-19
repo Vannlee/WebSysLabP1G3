@@ -18,7 +18,7 @@ if ($conn->connect_error) {
 }
 
 $email = $_SESSION["email"];
-$stmt = $conn->prepare("SELECT fname, lname, email FROM world_of_pets_members WHERE email=?");
+$stmt = $conn->prepare("SELECT fname, lname, email FROM gymbros_members WHERE email=?");
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $result = $stmt->get_result();
