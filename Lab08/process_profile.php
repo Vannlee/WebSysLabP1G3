@@ -14,15 +14,22 @@ if (!isset($_SESSION["email"])) {
     die("Access denied. Please <a href='login.php'>log in</a> first.");
 }
 
-$email = $_SESSION["email"];
+$user_id = $_POST["user_id"] ?? null;
 
 // Validate form input
-if (empty($_POST["fname"]) || empty($_POST["lname"])) {
-    $errorMsg .= "First name and last name are required.<br>";
+if (empty($_POST["fname"]) || empty($_POST["lname"]) || empty($_POST["email"])) {
+    $errorMsg .= "First name, last name, and email are required.<br>";
     $success = false;
 } else {
     $fname = sanitize_input($_POST["fname"]);
     $lname = sanitize_input($_POST["lname"]);
+    $new_email = sanitize_input($_POST["email"]);
+
+    // Validate new email format
+    if (!filter_var($new_email, FILTER_VALIDATE_EMAIL)) {
+        $errorMsg .= "Invalid email format.<br>";
+        $success = false;
+    }
 }
 
 // Check if user wants to update password
@@ -44,6 +51,8 @@ if ($success) {
     echo "<main class='container'>";
     echo "<h3>Profile updated successfully!</h3>";
     echo "<p><a class='btn btn-success' href='profile.php'>Return to Profile</a></p></main>";
+    // Update session email if the user changed it
+    $_SESSION["email"] = $new_email;
 } else {
     echo "<title>Profile Update Failed</title>";
     echo "<main class='container'>";
@@ -63,7 +72,7 @@ function sanitize_input($data) {
  * Update user profile in the database.
  */
 function updateProfile() {
-    global $fname, $lname, $email, $new_password, $errorMsg, $success;
+    global $fname, $lname, $new_email, $new_password, $user_id, $errorMsg, $success;
 
     $config = parse_ini_file('/var/www/private/db-config.ini');
     $conn = new mysqli($config['servername'], $config['username'], $config['password'], $config['dbname']);
@@ -75,13 +84,27 @@ function updateProfile() {
         return;
     }
 
-    // If the password is being updated
+    // Check if the new email already exists (to prevent duplicate emails)
+    $stmt = $conn->prepare("SELECT id FROM gymbros_members WHERE email=? AND id != ?");
+    $stmt->bind_param("si", $new_email, $user_id);
+    $stmt->execute();
+    $stmt->store_result();
+
+    if ($stmt->num_rows > 0) {
+        $errorMsg = "This email is already in use by another user.";
+        $success = false;
+        return;
+    }
+    $stmt->close();
+
+    // ✅ If updating password
     if (!empty($new_password)) {
-        $stmt = $conn->prepare("UPDATE gymbros_members SET fname=?, lname=?, password=? WHERE email=?");
-        $stmt->bind_param("ssss", $fname, $lname, $new_password, $email);
+        $stmt = $conn->prepare("UPDATE gymbros_members SET fname=?, lname=?, email=?, password=? WHERE id=?");
+        $stmt->bind_param("ssssi", $fname, $lname, $new_email, $new_password, $user_id);
     } else {
-        $stmt = $conn->prepare("UPDATE gymbros_members SET fname=?, lname=? WHERE email=?");
-        $stmt->bind_param("sss", $fname, $lname, $email);
+        // ✅ If NOT updating password
+        $stmt = $conn->prepare("UPDATE gymbros_members SET fname=?, lname=?, email=? WHERE id=?");
+        $stmt->bind_param("sssi", $fname, $lname, $new_email, $user_id);
     }
 
     if (!$stmt->execute()) {
