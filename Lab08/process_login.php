@@ -97,10 +97,11 @@ function authenticateUser() {
                 $token = bin2hex(random_bytes(32));
                 $token_hash = hash("sha256", $token);
 
-                $stmt = $conn->prepare("INSERT INTO login_tokens (user_id, token_hash, expire_at) 
-                                        VALUES (?, ?, DATE_ADD(NOW(), INTERVAL 30 DAY)) 
-                                        ON DUPLICATE KEY UPDATE token_hash=?, expire_at=DATE_ADD(NOW(), INTERVAL 30 DAY)");
+                $stmt = $conn->prepare("INSERT INTO login_tokens (member_id, token_hash, expire_at) 
+                        VALUES (?, ?, DATE_ADD(NOW(), INTERVAL 30 DAY)) 
+                        ON DUPLICATE KEY UPDATE token_hash=?, expire_at=DATE_ADD(NOW(), INTERVAL 30 DAY)");
                 $stmt->bind_param("iss", $user_id, $token_hash, $token_hash);
+
                 $stmt->execute();
                 setcookie("remember_me", $token, time() + (86400 * 30), "/", "", true, true);
             }
