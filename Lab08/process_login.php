@@ -102,6 +102,14 @@ function authenticateUser() {
                 $lname = $row["lname"];
                 $pwd_hashed = $row["password"];
 
+
+                 // Debugging: Log password comparison
+                error_log("Debug: Stored password hash: " . $pwd_hashed);
+                error_log("Debug: Entered password: " . $pwd);
+
+
+
+
                 // Check if the password matches:
                 if (password_verify($pwd, $pwd_hashed)) {
                     $_SESSION["email"] = $email;
