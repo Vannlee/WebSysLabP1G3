@@ -57,7 +57,7 @@
                     </label>
                 </div>
                 <div class="mb-3">
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary" disabled>Submit</button>
                 </div>
             </form>
             <script defer src="js/validation.js"></script>

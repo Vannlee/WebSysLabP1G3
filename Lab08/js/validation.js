@@ -57,4 +57,27 @@ document.getElementById("pwd_confirm").addEventListener("input", function () {
     }
 });
 
+function checkFormValidity() {
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("pwd").value.trim();
+    const confirmPassword = document.getElementById("pwd_confirm").value.trim();
+    const submitBtn = document.querySelector("button[type='submit']");
+
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const passwordValid = password.length >= 8;
+    const passwordsMatch = password === confirmPassword;
+
+    if (emailPattern.test(email) && passwordValid && passwordsMatch) {
+        submitBtn.disabled = false;
+    } else {
+        submitBtn.disabled = true;
+    }
+}
+
+// Attach the function to all relevant input fields
+["email", "pwd", "pwd_confirm"].forEach(id => {
+    document.getElementById(id).addEventListener("input", checkFormValidity);
+});
+
+
 
