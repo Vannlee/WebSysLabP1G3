@@ -1,11 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Fitness Gym</title>
-        <meta charset="utf-8"/>
+        <title>Fitness Gym</title>      
         <meta name="description" content="Fitness Gym - Landing Page"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <link rel="stylesheet" href="css/main.css"/>
         <?php
             include "inc/head.inc.php";
         ?>
