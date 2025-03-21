@@ -15,35 +15,11 @@
         <main class="container" id="locations">
             <!-- Northeast section -->
             <section id="northeast">
-                <h2>Northeast Locations</h2>
+                <h2>Southwest Locations</h2>
                 <div class ="row">
-                <article class="col-sm">
-                    <figure>
-                        <img class="img-thumbnail" src="images/sengkang_branch.jpg" 
-                            alt="Sengkang GymBro Branch" title="Click to make a booking"
-                            location="Anchorvale Road, #123" hours="07:00 - 22:00"
-                            contact="61234567"/>
-                        <figcaption>Sengkang GymBro Branch</figcaption>
-                    </figure>
-                </article>
-                <article class="col-sm">
-                    <figure>
-                        <img class="img-thumbnail" src="images/hougang_branch.jpg" 
-                            alt="Hougang GymBro Branch" title="Click to make a booking"
-                            location="Hougang Ave 68, #456" hours="06:00 - 23:00"
-                            contact="98765432"/>
-                        <figcaption>Hougang GymBro Branch</figcaption>
-                    </figure>
-                </article>
-                <article class="col-sm">
-                    <figure>
-                        <img class="img-thumbnail" src="images/punggol_branch.jpg" 
-                            alt="Punggol GymBro Branch" title="Click to make a booking"
-                            location="Teck Lee LRT" hours="09:00 - 00:00"
-                            contact="99996666"/>
-                        <figcaption>Punggol GymBro Branch</figcaption>
-                    </figure>
-                </article>
+                    <?php
+                        getLocations("Northeast");
+                    ?>
                 </div>
             </section>
 
@@ -89,3 +65,43 @@
         ?>
     </body>
 </html>
+
+<?php
+    /**
+     * Function to register user in the database.
+     */
+    function getLocations($location) {
+        // Database connection
+        $config = parse_ini_file('/var/www/private/db-config.ini');
+        $conn = new mysqli($config['servername'], $config['username'], $config['password'], $config['dbname']);
+
+        if ($conn->connect_error) {
+            $errorMsg = "Database connection failed: " . $conn->connect_error;
+            error_log("Debug: Connection failed - " . $conn->connect_error);
+            $success = false;
+            return;
+        }
+
+        $stmt = $conn->prepare("SELECT loc_name,loc_addr,loc_contact,morning_slot,afternoon_slot,image_path FROM Gymbros.location WHERE area=?;");
+        $stmt->bind_param("s", $location);
+        $stmt->execute();
+        $stmt->store_result();
+
+        if ($stmt->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                echo '<article class="col-sm">';
+                echo '<figure>';
+                echo '<img class="img-thumbnail" src="' . $row["image_path"] . '" 
+                        alt="' . $row["loc_name"] . '" title="Click to make a booking"
+                        location="' . $row["loc_addr"] . '" booking_hours="' . $row["morning_slot"] . ', ' . $row["afternoon_slot"] . '"
+                        contact="' . $row["loc_contact"] . '"/>';
+                echo '<figcaption>' . $row["loc_name"] . '</figcaption>';
+                echo '</figure>';
+                echo '</article>';
+            }
+        }
+
+        $stmt->close();
+        $conn->close();
+    }
+?>
