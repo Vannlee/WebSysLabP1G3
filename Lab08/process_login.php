@@ -80,14 +80,14 @@ function authenticateUser() {
         return;
     }
 
-    $stmt = $conn->prepare("SELECT id, fname, lname, password FROM gymbros_members WHERE email=?");
+    $stmt = $conn->prepare("SELECT member_id, fname, lname, password FROM gymbros_members WHERE email=?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
-        $user_id = $row["id"];
+        $user_id = $row["member_id"];
         $fname = $row["fname"];
         $lname = $row["lname"];
         $pwd_hashed = $row["password"];
