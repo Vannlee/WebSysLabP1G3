@@ -27,21 +27,28 @@
                     <label for="lname" class="form-label">Last Name:</label>
                     <input required maxlength="45" type="text" id="lname" name="lname" class="form-control"
                         placeholder="Enter last name">
+                    <p id="lnameError"></p>
+
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">Email:</label>
                     <input required maxlength="45" type="email" id="email" name="email" class="form-control"
                         placeholder="Enter email">
+                    <p id="emailError"></p>
+
                 </div>
                 <div class="mb-3">
                     <label for="pwd" class="form-label">Password:</label>
                     <input required type="password" id="pwd" name="pwd" class="form-control"
                         placeholder="Enter password">
+                    <p id="passwordError"></p>
+
                 </div>
                 <div class="mb-3">
                     <label for="pwd_confirm" class="form-label">Confirm Password:</label>
                     <input required type="password" id="pwd_confirm" name="pwd_confirm" class="form-control"
                         placeholder="Confirm password">
+                    <p id="confirmPasswordError"></p>
                 </div>
                 <div class="mb-3 form-check">
                     <input required type="checkbox" name="agree" id="agree" class="form-check-input">
@@ -53,6 +60,7 @@
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
             </form>
+            <script defer src="js/validation.js"></script>
         </main>
         <?php
         include "inc/footer.inc.php";
