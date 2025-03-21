@@ -35,7 +35,12 @@
                     <input required maxlength="45" type="email" id="email" name="email" class="form-control"
                         placeholder="Enter email">
                     <p id="emailError"></p>
-
+                </div>
+                <div class="mb-3">
+                    <label for="contact" class="form-label">Contact No:</label>
+                    <input required maxlength="8" type="text" id="contact" name="contact" class="form-control"
+                        placeholder="Enter contact number">
+                    <p id="contactError"></p>
                 </div>
                 <div class="mb-3">
                     <label for="pwd" class="form-label">Password:</label>
