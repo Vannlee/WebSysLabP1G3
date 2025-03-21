@@ -26,6 +26,24 @@ document.getElementById("email").addEventListener("input", function () {
     }
 });
 
+document.getElementById("contact").addEventListener("input", function () {
+    const contact = this.value.trim();
+    const contactError = document.getElementById("contactError");
+
+    // Regex: Only digits, exactly 8 of them
+    const contactPattern = /^[0-9]{8}$/;
+
+    if (contact === "") {
+        contactError.textContent = "Contact number is required.";
+    } else if (!contactPattern.test(contact)) {
+        contactError.textContent = "Contact number must be exactly 8 digits (numbers only).";
+    } else {
+        contactError.textContent = "";
+    }
+});
+
+
+
 document.getElementById("pwd").addEventListener("input", function () {
     let password = this.value.trim();
     let passwordError = document.getElementById("passwordError");
@@ -61,23 +79,28 @@ function checkFormValidity() {
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("pwd").value.trim();
     const confirmPassword = document.getElementById("pwd_confirm").value.trim();
+    const contact = document.getElementById("contact").value.trim();
     const submitBtn = document.querySelector("button[type='submit']");
 
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const contactPattern = /^[0-9]{8}$/;
+
     const passwordValid = password.length >= 8;
     const passwordsMatch = password === confirmPassword;
+    const contactValid = contactPattern.test(contact);
 
-    if (emailPattern.test(email) && passwordValid && passwordsMatch) {
+    if (emailPattern.test(email) && passwordValid && passwordsMatch && contactValid) {
         submitBtn.disabled = false;
     } else {
         submitBtn.disabled = true;
     }
 }
 
-// Attach the function to all relevant input fields
-["email", "pwd", "pwd_confirm"].forEach(id => {
+// Attach event listeners
+["email", "pwd", "pwd_confirm", "contact"].forEach(id => {
     document.getElementById(id).addEventListener("input", checkFormValidity);
 });
+
 
 
 

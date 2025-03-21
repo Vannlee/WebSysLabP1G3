@@ -11,7 +11,18 @@
         <?php
             include "inc/nav.inc.php";
         ?>
-        <main class="container">
+        <noscript>
+            <style>
+                #main-content {
+                    display: none !important;
+                }
+            </style>
+            <div style="text-align: center; padding: 2rem; color: red; font-weight: bold;">
+                ⚠ JavaScript is disabled in your browser. Please enable it to use this site.
+            </div>
+        </noscript>
+
+        <main id="main-content" class="container">
             <h1>Member Registration</h1>
             <p>
                 For existing members, please go to the
@@ -27,28 +38,33 @@
                     <label for="lname" class="form-label">Last Name:</label>
                     <input required maxlength="45" type="text" id="lname" name="lname" class="form-control"
                         placeholder="Enter last name">
-                    <p id="lnameError"></p>
+                    <p id="lnameError" class="text-danger small mt-1 mb-0"></p>
 
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">Email:</label>
                     <input required maxlength="45" type="email" id="email" name="email" class="form-control"
                         placeholder="Enter email">
-                    <p id="emailError"></p>
-
+                    <p id="emailError" class="text-danger small mt-1 mb-0"></p>
+                </div>
+                <div class="mb-3">
+                    <label for="contact" class="form-label">Contact No:</label>
+                    <input required maxlength="8" type="text" id="contact" name="contact" class="form-control"
+                        placeholder="Enter contact number">
+                    <p id="contactError" class="text-danger small mt-1 mb-0"></p>
                 </div>
                 <div class="mb-3">
                     <label for="pwd" class="form-label">Password:</label>
                     <input required type="password" id="pwd" name="pwd" class="form-control"
                         placeholder="Enter password">
-                    <p id="passwordError"></p>
+                    <p id="passwordError" class="text-danger small mt-1 mb-0"></p>
 
                 </div>
                 <div class="mb-3">
                     <label for="pwd_confirm" class="form-label">Confirm Password:</label>
                     <input required type="password" id="pwd_confirm" name="pwd_confirm" class="form-control"
                         placeholder="Confirm password">
-                    <p id="confirmPasswordError"></p>
+                    <p id="confirmPasswordError" class="text-danger small mt-1 mb-0"></p>
                 </div>
                 <div class="mb-3 form-check">
                     <input required type="checkbox" name="agree" id="agree" class="form-check-input">
