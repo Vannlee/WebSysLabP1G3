@@ -24,7 +24,7 @@ function displayModal(image) {
     var popupId = image.target.alt;
     var popup = document.getElementById(popupId);
     var location = image.target.getAttribute('location');
-    var hours = image.target.getAttribute('hours');
+    var booking_slots = image.target.getAttribute('booking_slots');
     var contact = image.target.getAttribute('contact');
 
     // If modal exists, remove it
@@ -57,7 +57,7 @@ function displayModal(image) {
         infoContainer.innerHTML = `
         <h2>${popupId}</h2>
         <p>Location: ${location}<br>
-        Hours: ${hours}<br>
+        Booking Slots: ${booking_slots}<br>
         Contact Number: ${contact}</p>`;
 
         // Create button to redirect to booking page
