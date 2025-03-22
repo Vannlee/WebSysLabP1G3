@@ -42,7 +42,7 @@
     </body>
     <?php
         /**
-         * Function to register user in the database.
+         * Function to retrieve location records from database.
          */
         function getLocations($area) {
             // Database connection
