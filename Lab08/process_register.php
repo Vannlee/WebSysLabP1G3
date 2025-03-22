@@ -10,13 +10,14 @@ $errorMsg = "";
 $success = true;
 
 // Validate inputs
-if (empty($_POST["fname"]) || empty($_POST["lname"]) || empty($_POST["email"]) || empty($_POST["pwd"])) {
+if (empty($_POST["fname"]) || empty($_POST["lname"]) || empty($_POST["email"]) || empty($_POST["contact"]) || empty($_POST["pwd"]) || empty($_POST["pwd_confirm"])) {
     $errorMsg = "All fields are required.<br>";
     $success = false;
 } else {
     $fname = sanitize_input($_POST["fname"]);
     $lname = sanitize_input($_POST["lname"]);
     $email = sanitize_input($_POST["email"]);
+    $contact = sanitize_input($_POST["contact"]);
     $pwd = $_POST["pwd"];
 
     // Validate email format
@@ -56,7 +57,7 @@ function sanitize_input($data) {
  * Function to register user in the database.
  */
 function registerUser() {
-    global $fname, $lname, $email, $pwd, $errorMsg, $success;
+    global $fname, $lname, $email, $contact, $pwd, $errorMsg, $success;
 
     // Database connection
     $config = parse_ini_file('/var/www/private/db-config.ini');
@@ -82,12 +83,26 @@ function registerUser() {
     }
     $stmt->close();
 
+    // Check if the contact is already registered
+    $stmt = $conn->prepare("SELECT contact FROM gymbros_members WHERE contact=?");
+    $stmt->bind_param("s", $contact);
+    $stmt->execute();
+    $stmt->store_result();
+
+    if ($stmt->num_rows > 0) {
+        $errorMsg = "This contact number is already registered.";
+        $success = false;
+        return;
+    }
+    $stmt->close();
+
+
     // Hash password before storing
     $hashed_password = password_hash($pwd, PASSWORD_DEFAULT);
 
     // Insert new user into the database
-    $stmt = $conn->prepare("INSERT INTO gymbros_members (fname, lname, email, password, datejoin) VALUES (?, ?, ?, ?, NOW())");
-    $stmt->bind_param("ssss", $fname, $lname, $email, $hashed_password);
+    $stmt = $conn->prepare("INSERT INTO gymbros_members (fname, lname, email, contact, password, datejoin, membership) VALUES (?, ?, ?, ?, ?, NOW(), 'basic')");
+    $stmt->bind_param("sssss", $fname, $lname, $email, $contact, $hashed_password);
 
     if (!$stmt->execute()) {
         $errorMsg = "Error inserting user: " . $stmt->error;
