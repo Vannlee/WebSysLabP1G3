@@ -59,7 +59,7 @@
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
             <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="images/register.png" alt="Fitness Gym" title="Fitness Gym" width="20"/>
+                    <img src="images/register.png" alt="Fitness Gym" title="Fitness Gym" width="50"/>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <li>
