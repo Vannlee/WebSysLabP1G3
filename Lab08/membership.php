@@ -1,9 +1,11 @@
+<?php
+    session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <title>Fitness Gym</title>
         <?php
-            session_start();
             include "inc/head.inc.php";
             include "inc/enablejs.inc.php";
         ?>
