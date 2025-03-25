@@ -10,18 +10,8 @@
     <body>
         <?php
             include "inc/nav.inc.php";
+            include "inc/enablejs.inc.php";
         ?>
-        <noscript>
-            <style>
-                #main-content {
-                    display: none !important;
-                }
-            </style>
-            <div style="text-align: center; padding: 2rem; color: red; font-weight: bold;">
-                ⚠ JavaScript is disabled in your browser. Please enable it to use this site.
-            </div>
-        </noscript>
-
         <main id="main-content" class="container">
             <h1>Member Registration</h1>
             <p>

@@ -4,12 +4,14 @@
         <title>Fitness Gym</title>      
         <meta name="description" content="Fitness Gym - Landing Page"/>
         <?php
+            session_start();
             include "inc/head.inc.php";
         ?>
     </head>
     <body>
         <?php
             include "inc/nav.inc.php";
+            include "inc/enablejs.inc.php";
             include "inc/carousel.inc.php";
         ?>
         <main class="container" id="locations">

@@ -1,5 +1,6 @@
 <?php
-session_start();
+//session_start();
+session_unset();
 session_destroy();
 
 // Remove Remember Me Cookie
@@ -22,6 +23,6 @@ if (isset($_COOKIE["remember_me"])) {
 }
 
 $conn->close();
-header("Location: login.php");
+header("Location: index.php");
 exit();
 ?>
