@@ -1,5 +1,5 @@
 <?php
-//session_start();
+session_start();
 session_unset();
 session_destroy();
 
@@ -23,6 +23,9 @@ if (isset($_COOKIE["remember_me"])) {
 }
 
 $conn->close();
-header("Location: index.php");
+header("Cache-Control: no-cache, no-store, must-revalidate");
+header("Pragma: no-cache");
+header("Expires: 0");
+header("Location: login.php");
 exit();
 ?>

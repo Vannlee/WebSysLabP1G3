@@ -1,10 +1,12 @@
+<?php
+    session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <title>Fitness Gym</title>      
         <meta name="description" content="Fitness Gym - Landing Page"/>
         <?php
-            session_start();
             include "inc/head.inc.php";
         ?>
     </head>
@@ -35,9 +37,6 @@
                 </div>
             </section>
         </main>
-        <noscript>
-            <p style="color: red;">JavaScript is disabled in your browser. Please enable it for the best experience.</p>
-        </noscript>
         <?php
             include "inc/footer.inc.php";
         ?>
