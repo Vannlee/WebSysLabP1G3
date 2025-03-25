@@ -17,82 +17,61 @@
 
         <main class="container">
         <section class="container my-5">
-  <h2 class="text-center mb-4">Choose Your Membership</h2>
+    <h2 class="text-center mb-4">Choose Your Membership</h2>
+    <div class="row justify-content-center g-4">
 
-  <div class="row g-4 justify-content-center">
-
-    <!-- Student Tier -->
-    <div class="col-12 col-sm-6 col-lg-3">
-      <div class="card h-100 shadow text-center">
-        <div class="card-body">
-          <h5 class="card-title">Student</h5>
-          <h6 class="card-subtitle mb-2 text-muted">$35/month</h6>
-          <p class="card-text">✅2 Hour Gym Access daily</p>
-          <p class="card-text">✅Free Locker</p>
+        <!-- Tier 1 -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Basic</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Free</h6>
+                    <p class="card-text">✅1 Hour Gym Access daily</p>
+          <p class="card-text">❌Free Locker</p>
           <p class="card-text">❌Protein Shake</p>
           <p class="card-text">❌Gym Item Discounts</p>
           <p class="card-text">❌Personal Trainer</p>
-          <p class="card-text">❌VIP Lounge</p>
-
-
-          <a href="register.php" class="btn btn-outline-primary">Select</a>
+          <p class="card-text">❌VIP Lounge</p>                    <a href="register.php" class="btn btn-outline-primary">Select</a>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Basic Tier -->
-    <div class="col-12 col-sm-6 col-lg-3">
-      <div class="card h-100 shadow text-center">
-        <div class="card-body">
-          <h5 class="card-title">Standard</h5>
-          <h6 class="card-subtitle mb-2 text-muted">$55/month</h6>
-          <p class="card-text">✅2 Hour Gym Access daily</p>
+        <!-- Tier 2 -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow border-primary">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Premium</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">$40/month</h6>
+                    <p class="card-text">✅2 Hour Gym Access daily</p>
           <p class="card-text">✅Free Locker</p>
           <p class="card-text">✅Protein Shake</p>
           <p class="card-text">❌Gym Item Discounts</p>
           <p class="card-text">❌Personal Trainer</p>
-          <p class="card-text">❌VIP Lounge</p>
-          <a href="register.php" class="btn btn-outline-primary">Select</a>
+          <p class="card-text">❌VIP Lounge</p>                    <a href="register.php" class="btn btn-primary">Select</a>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Premium Tier -->
-    <div class="col-12 col-sm-6 col-lg-3">
-      <div class="card h-100 shadow text-center border-primary">
-        <div class="card-body">
-          <h5 class="card-title">Premium</h5>
-          <h6 class="card-subtitle mb-2 text-muted">$75/month</h6>
-          <p class="card-text">✅2 Hour Gym Access daily</p>
-          <p class="card-text">✅Free Locker</p>
-          <p class="card-text">✅Protein Shake</p>
-          <p class="card-text">✅Gym Item Discounts</p>
-          <p class="card-text">❌Personal Trainer</p>
-          <p class="card-text">❌VIP Lounge</p>
-          <a href="register.php" class="btn btn-primary">Select</a>
-        </div>
-      </div>
-    </div>
-
-    <!-- Ultimate Tier -->
-    <div class="col-12 col-sm-6 col-lg-3">
-      <div class="card h-100 shadow text-center">
-        <div class="card-body">
-          <h5 class="card-title">Ultimate</h5>
-          <h6 class="card-subtitle mb-2 text-muted">$110/month</h6>
-          <p class="card-text">✅2 Hour Gym Access daily</p>
+        <!-- Tier 3 -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Elite</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">$90/month</h6>
+                    <p class="card-text">✅Unlimited Gym Access daily</p>
           <p class="card-text">✅Free Locker</p>
           <p class="card-text">✅Protein Shake</p>
           <p class="card-text">✅Gym Item Discounts</p>
           <p class="card-text">✅Personal Trainer</p>
-          <p class="card-text">✅VIP Lounge</p>
-          <a href="register.php" class="btn btn-outline-primary">Select</a>
+          <p class="card-text">✅VIP Lounge</p>                    <a href="register.php" class="btn btn-outline-primary">Select</a>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
 
-  </div>
+    </div>
 </section>
+
+          
 
 
         </main>
