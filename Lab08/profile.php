@@ -35,42 +35,50 @@ $conn->close();
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Update Profile</title>
+    <title>Update or Delete Profile</title>
 </head>
 <body>
-    <main class="container">
-        <h1>Update Profile</h1>
-        <form action="process_profile.php" method="post">
-            <input type="hidden" name="member_id" value="<?php echo htmlspecialchars($user['member_id']); ?>">
+<main class="container">
+    <h1>Manage Your Profile</h1>
+    <form action="process_profile.php" method="post">
+        <input type="hidden" name="member_id" value="<?php echo htmlspecialchars($user['member_id']); ?>">
 
-            <div class="mb-3">
-                <label for="fname" class="form-label">First Name:</label>
-                <input type="text" id="fname" name="fname" class="form-control" value="<?php echo htmlspecialchars($user['fname']); ?>" required>
-            </div>
+        <div class="mb-3">
+            <label for="action_type" class="form-label">What do you want to do?</label>
+            <select name="action_type" id="action_type" class="form-control" required>
+                <option value="update" selected>Update Profile</option>
+                <option value="delete">Delete Profile</option>
+            </select>
+        </div>
 
-            <div class="mb-3">
-                <label for="lname" class="form-label">Last Name:</label>
-                <input type="text" id="lname" name="lname" class="form-control" value="<?php echo htmlspecialchars($user['lname']); ?>" required>
-            </div>
+        <div class="mb-3">
+            <label for="fname" class="form-label">First Name:</label>
+            <input type="text" id="fname" name="fname" class="form-control" value="<?php echo htmlspecialchars($user['fname']); ?>" required>
+        </div>
 
-            <div class="mb-3">
-                <label for="email" class="form-label">New Email:</label>
-                <input type="email" id="email" name="email" class="form-control" value="<?php echo htmlspecialchars($user['email']); ?>" required>
-            </div>
+        <div class="mb-3">
+            <label for="lname" class="form-label">Last Name:</label>
+            <input type="text" id="lname" name="lname" class="form-control" value="<?php echo htmlspecialchars($user['lname']); ?>" required>
+        </div>
 
-            <div class="mb-3">
-                <label for="current_pwd" class="form-label">Current Password (required to change email/password):</label>
-                <input type="password" id="current_pwd" name="current_pwd" class="form-control" required>
-            </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">New Email:</label>
+            <input type="email" id="email" name="email" class="form-control" value="<?php echo htmlspecialchars($user['email']); ?>" required>
+        </div>
 
-            <div class="mb-3">
-                <label for="new_pwd" class="form-label">New Password (leave blank if unchanged):</label>
-                <input type="password" id="new_pwd" name="new_pwd" class="form-control">
-            </div>
+        <div class="mb-3">
+            <label for="current_pwd" class="form-label">Current Password (required for all actions):</label>
+            <input type="password" id="current_pwd" name="current_pwd" class="form-control" required>
+        </div>
 
-            <button type="submit" class="btn btn-primary">Update Profile</button>
-        </form>
-    </main>
-    <?php include "inc/footer.inc.php"; ?>
+        <div class="mb-3">
+            <label for="new_pwd" class="form-label">New Password (only if updating):</label>
+            <input type="password" id="new_pwd" name="new_pwd" class="form-control">
+        </div>
+
+        <button type="submit" class="btn btn-danger">Submit</button>
+    </form>
+</main>
+<?php include "inc/footer.inc.php"; ?>
 </body>
 </html>
