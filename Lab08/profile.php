@@ -23,7 +23,7 @@ if ($conn->connect_error) {
 $email = $_SESSION["email"];
 
 // Fetch user data
-$stmt = $conn->prepare("SELECT id, fname, lname, email FROM gymbros_members WHERE email=?");
+$stmt = $conn->prepare("SELECT member_id, fname, lname, email FROM gymbros_members WHERE email=?");
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -41,7 +41,7 @@ $conn->close();
     <main class="container">
         <h1>Update Profile</h1>
         <form action="process_profile.php" method="post">
-            <input type="hidden" name="user_id" value="<?php echo htmlspecialchars($user['id']); ?>">
+            <input type="hidden" name="member_id" value="<?php echo htmlspecialchars($user['member_id']); ?>">
 
             <div class="mb-3">
                 <label for="fname" class="form-label">First Name:</label>
