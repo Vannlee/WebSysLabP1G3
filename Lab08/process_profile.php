@@ -14,7 +14,7 @@ if (!isset($_SESSION["email"])) {
     die("Access denied. Please <a href='login.php'>log in</a> first.");
 }
 
-$user_id = $_POST["user_id"] ?? null;
+$member_id = $_POST["member_id"] ?? null;
 $current_pwd = $_POST["current_pwd"] ?? null;
 $new_email = $_POST["email"] ?? null;
 $new_password = $_POST["new_pwd"] ?? null;
@@ -41,8 +41,8 @@ if ($conn->connect_error) {
 }
 
 // Fetch user details
-$stmt = $conn->prepare("SELECT password FROM gymbros_members WHERE id=?");
-$stmt->bind_param("i", $user_id);
+$stmt = $conn->prepare("SELECT password FROM gymbros_members WHERE member_id=?");
+$stmt->bind_param("i", $member_id);
 $stmt->execute();
 $result = $stmt->get_result();
 $user = $result->fetch_assoc();
@@ -55,8 +55,8 @@ if (!$user || !password_verify($current_pwd, $user["password"])) {
 
 // Check if new email is already taken
 if ($success) {
-    $stmt = $conn->prepare("SELECT id FROM gymbros_members WHERE email=? AND id != ?");
-    $stmt->bind_param("si", $new_email, $user_id);
+    $stmt = $conn->prepare("SELECT member_id FROM gymbros_members WHERE email=? AND member_id != ?");
+    $stmt->bind_param("si", $new_email, $member_id);
     $stmt->execute();
     $stmt->store_result();
 
@@ -71,11 +71,11 @@ if ($success) {
 if ($success) {
     if (!empty($new_password)) {
         $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
-        $stmt = $conn->prepare("UPDATE gymbros_members SET fname=?, lname=?, email=?, password=? WHERE id=?");
-        $stmt->bind_param("ssssi", $fname, $lname, $new_email, $hashed_password, $user_id);
+        $stmt = $conn->prepare("UPDATE gymbros_members SET fname=?, lname=?, email=?, password=? WHERE member_id=?");
+        $stmt->bind_param("ssssi", $fname, $lname, $new_email, $hashed_password, $member_id);
     } else {
-        $stmt = $conn->prepare("UPDATE gymbros_members SET fname=?, lname=?, email=? WHERE id=?");
-        $stmt->bind_param("sssi", $fname, $lname, $new_email, $user_id);
+        $stmt = $conn->prepare("UPDATE gymbros_members SET fname=?, lname=?, email=? WHERE member_id=?");
+        $stmt->bind_param("sssi", $fname, $lname, $new_email, $member_id);
     }
 
     if (!$stmt->execute()) {
@@ -102,4 +102,9 @@ if ($success) {
 }
 
 include "inc/footer.inc.php";
+
+// Helper function
+function sanitize_input($data) {
+    return htmlspecialchars(stripslashes(trim($data)));
+}
 ?>
