@@ -21,7 +21,7 @@ if ($conn->connect_error) {
 
 $email = $_SESSION["email"];
 
-$stmt = $conn->prepare("SELECT member_id, fname, lname, email FROM gymbros_members WHERE email=?");
+$stmt = $conn->prepare("SELECT member_id, fname, lname, email, contact, datejoin, membership FROM gymbros_members WHERE email=?");
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -58,7 +58,22 @@ $conn->close();
         </div>
 
         <div class="mb-3">
-            <label for="current_pwd" class="form-label">Current Password (required to update):</label>
+            <label for="contact" class="form-label">Contact Number:</label>
+            <input type="text" id="contact" name="contact" class="form-control" value="<?php echo htmlspecialchars($user['contact']); ?>" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="datejoin" class="form-label">Date Joined:</label>
+            <input type="text" id="datejoin" class="form-control" value="<?php echo htmlspecialchars($user['datejoin']); ?>" readonly>
+        </div>
+
+        <div class="mb-3">
+            <label for="membership" class="form-label">Membership Type:</label>
+            <input type="text" id="membership" class="form-control" value="<?php echo htmlspecialchars($user['membership']); ?>" readonly>
+        </div>
+
+        <div class="mb-3">
+            <label for="current_pwd" class="form-label">Current Password (required):</label>
             <input type="password" id="current_pwd" name="current_pwd" class="form-control" required>
         </div>
 
@@ -71,14 +86,13 @@ $conn->close();
     </form>
 
     <hr>
-
     <h3>Danger Zone</h3>
-    <form action="process_profile.php" method="post" onsubmit="return confirm('Are you sure you want to delete your profile? This cannot be undone.');">
+    <form action="process_profile.php" method="post" onsubmit="return confirm('Are you sure you want to delete your profile?');">
         <input type="hidden" name="member_id" value="<?php echo htmlspecialchars($user['member_id']); ?>">
         <input type="hidden" name="action_type" value="delete">
 
         <div class="mb-3">
-            <label for="current_pwd_del" class="form-label">Confirm Password to Delete Account:</label>
+            <label for="current_pwd_del" class="form-label">Password to Confirm Deletion:</label>
             <input type="password" id="current_pwd_del" name="current_pwd" class="form-control" required>
         </div>
 

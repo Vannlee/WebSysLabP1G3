@@ -18,6 +18,7 @@ $action_type   = $_POST["action_type"] ?? "update";
 $current_pwd   = $_POST["current_pwd"] ?? null;
 $new_email     = $_POST["email"] ?? null;
 $new_password  = $_POST["new_pwd"] ?? null;
+$contact       = sanitize_input($_POST["contact"] ?? '');
 $fname         = sanitize_input($_POST["fname"] ?? '');
 $lname         = sanitize_input($_POST["lname"] ?? '');
 
@@ -33,7 +34,6 @@ if ($conn->connect_error) {
     die("Database connection failed: " . $conn->connect_error);
 }
 
-// Validate password
 $stmt = $conn->prepare("SELECT password FROM gymbros_members WHERE member_id=?");
 $stmt->bind_param("i", $member_id);
 $stmt->execute();
@@ -64,14 +64,13 @@ if ($success && $action_type === "delete") {
 }
 
 if ($success && $action_type === "update") {
-    // Check if email already exists
     $stmt = $conn->prepare("SELECT member_id FROM gymbros_members WHERE email=? AND member_id != ?");
     $stmt->bind_param("si", $new_email, $member_id);
     $stmt->execute();
     $stmt->store_result();
 
     if ($stmt->num_rows > 0) {
-        $errorMsg .= "Email already in use by another user.<br>";
+        $errorMsg .= "Email already in use.<br>";
         $success = false;
     }
     $stmt->close();
@@ -80,11 +79,11 @@ if ($success && $action_type === "update") {
 if ($success) {
     if (!empty($new_password)) {
         $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
-        $stmt = $conn->prepare("UPDATE gymbros_members SET fname=?, lname=?, email=?, password=? WHERE member_id=?");
-        $stmt->bind_param("ssssi", $fname, $lname, $new_email, $hashed_password, $member_id);
+        $stmt = $conn->prepare("UPDATE gymbros_members SET fname=?, lname=?, email=?, contact=?, password=? WHERE member_id=?");
+        $stmt->bind_param("sssssi", $fname, $lname, $new_email, $contact, $hashed_password, $member_id);
     } else {
-        $stmt = $conn->prepare("UPDATE gymbros_members SET fname=?, lname=?, email=? WHERE member_id=?");
-        $stmt->bind_param("sssi", $fname, $lname, $new_email, $member_id);
+        $stmt = $conn->prepare("UPDATE gymbros_members SET fname=?, lname=?, email=?, contact=? WHERE member_id=?");
+        $stmt->bind_param("ssssi", $fname, $lname, $new_email, $contact, $member_id);
     }
 
     if ($stmt->execute()) {
@@ -92,7 +91,7 @@ if ($success) {
         echo "<main class='container'><h3>Profile updated successfully.</h3>
               <p><a class='btn btn-success' href='profile.php'>Return to Profile</a></p></main>";
     } else {
-        $errorMsg .= "Update failed: " . $stmt->error . "<br>";
+        $errorMsg .= "Update failed: " . $stmt->error;
     }
 
     $stmt->close();
@@ -108,7 +107,6 @@ if (!$success) {
 
 include "inc/footer.inc.php";
 
-// Helper
 function sanitize_input($data) {
     return htmlspecialchars(stripslashes(trim($data)));
 }
