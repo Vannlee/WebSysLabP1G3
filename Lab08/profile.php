@@ -1,13 +1,12 @@
 <?php
 session_start();
-ob_start(); // Prevents "headers already sent" errors
+ob_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 include "inc/head.inc.php";
 include "inc/nav.inc.php";
 
-// Ensure user is logged in
 if (!isset($_SESSION["email"])) {
     header("Location: login.php");
     exit();
@@ -17,12 +16,11 @@ $config = parse_ini_file('/var/www/private/db-config.ini');
 $conn = new mysqli($config['servername'], $config['username'], $config['password'], $config['dbname']);
 
 if ($conn->connect_error) {
-    die("Database connection failed: " . $conn->connect_error);
+    die("Connection failed: " . $conn->connect_error);
 }
 
 $email = $_SESSION["email"];
 
-// Fetch user data
 $stmt = $conn->prepare("SELECT member_id, fname, lname, email FROM gymbros_members WHERE email=?");
 $stmt->bind_param("s", $email);
 $stmt->execute();
@@ -35,21 +33,14 @@ $conn->close();
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Update or Delete Profile</title>
+    <title>Manage Profile</title>
 </head>
 <body>
 <main class="container">
-    <h1>Manage Your Profile</h1>
+    <h1>Update Profile</h1>
     <form action="process_profile.php" method="post">
         <input type="hidden" name="member_id" value="<?php echo htmlspecialchars($user['member_id']); ?>">
-
-        <div class="mb-3">
-            <label for="action_type" class="form-label">What do you want to do?</label>
-            <select name="action_type" id="action_type" class="form-control" required>
-                <option value="update" selected>Update Profile</option>
-                <option value="delete">Delete Profile</option>
-            </select>
-        </div>
+        <input type="hidden" name="action_type" value="update">
 
         <div class="mb-3">
             <label for="fname" class="form-label">First Name:</label>
@@ -67,16 +58,31 @@ $conn->close();
         </div>
 
         <div class="mb-3">
-            <label for="current_pwd" class="form-label">Current Password (required for all actions):</label>
+            <label for="current_pwd" class="form-label">Current Password (required to update):</label>
             <input type="password" id="current_pwd" name="current_pwd" class="form-control" required>
         </div>
 
         <div class="mb-3">
-            <label for="new_pwd" class="form-label">New Password (only if updating):</label>
+            <label for="new_pwd" class="form-label">New Password (leave blank to keep existing):</label>
             <input type="password" id="new_pwd" name="new_pwd" class="form-control">
         </div>
 
-        <button type="submit" class="btn btn-danger">Submit</button>
+        <button type="submit" class="btn btn-primary">Update Profile</button>
+    </form>
+
+    <hr>
+
+    <h3>Danger Zone</h3>
+    <form action="process_profile.php" method="post" onsubmit="return confirm('Are you sure you want to delete your profile? This cannot be undone.');">
+        <input type="hidden" name="member_id" value="<?php echo htmlspecialchars($user['member_id']); ?>">
+        <input type="hidden" name="action_type" value="delete">
+
+        <div class="mb-3">
+            <label for="current_pwd_del" class="form-label">Confirm Password to Delete Account:</label>
+            <input type="password" id="current_pwd_del" name="current_pwd" class="form-control" required>
+        </div>
+
+        <button type="submit" class="btn btn-danger">Delete Profile</button>
     </form>
 </main>
 <?php include "inc/footer.inc.php"; ?>

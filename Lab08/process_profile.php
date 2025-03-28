@@ -33,7 +33,7 @@ if ($conn->connect_error) {
     die("Database connection failed: " . $conn->connect_error);
 }
 
-// Verify current password
+// Validate password
 $stmt = $conn->prepare("SELECT password FROM gymbros_members WHERE member_id=?");
 $stmt->bind_param("i", $member_id);
 $stmt->execute();
@@ -41,33 +41,29 @@ $result = $stmt->get_result();
 $user = $result->fetch_assoc();
 $stmt->close();
 
-if (!$user || !password_verify($current_pwd, $user['password'])) {
-    $errorMsg .= "Current password is incorrect.<br>";
+if (!$user || !password_verify($current_pwd, $user["password"])) {
+    $errorMsg .= "Incorrect password.<br>";
     $success = false;
 }
 
-if ($success && $action_type === 'delete') {
-    // DELETE the user
+if ($success && $action_type === "delete") {
     $stmt = $conn->prepare("DELETE FROM gymbros_members WHERE member_id=?");
     $stmt->bind_param("i", $member_id);
-
     if ($stmt->execute()) {
         session_destroy();
         echo "<main class='container'><h3>Profile deleted successfully.</h3>
-              <p><a class='btn btn-primary' href='register.php'>Register New Account</a></p></main>";
+              <p><a href='register.php' class='btn btn-primary'>Register New Account</a></p></main>";
     } else {
-        echo "<main class='container'><h3>Deletion failed: " . $stmt->error . "</h3>
+        echo "<main class='container'><h3>Failed to delete account: " . $stmt->error . "</h3>
               <p><a class='btn btn-warning' href='profile.php'>Back to Profile</a></p></main>";
     }
-
     $stmt->close();
     $conn->close();
     include "inc/footer.inc.php";
     exit();
 }
 
-// If action is UPDATE
-if ($success) {
+if ($success && $action_type === "update") {
     // Check if email already exists
     $stmt = $conn->prepare("SELECT member_id FROM gymbros_members WHERE email=? AND member_id != ?");
     $stmt->bind_param("si", $new_email, $member_id);
@@ -75,7 +71,7 @@ if ($success) {
     $stmt->store_result();
 
     if ($stmt->num_rows > 0) {
-        $errorMsg .= "Email already in use by another account.<br>";
+        $errorMsg .= "Email already in use by another user.<br>";
         $success = false;
     }
     $stmt->close();
@@ -105,7 +101,7 @@ if ($success) {
 $conn->close();
 
 if (!$success) {
-    echo "<main class='container'><h3>Update Failed</h3>
+    echo "<main class='container'><h3>Action Failed</h3>
           <p>$errorMsg</p>
           <p><a class='btn btn-warning' href='profile.php'>Try Again</a></p></main>";
 }
