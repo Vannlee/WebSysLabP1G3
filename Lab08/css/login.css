@@ -1,0 +1,46 @@
+.login-container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 40px 0;
+}
+
+.login-card {
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+.login-header {
+    background-color: #f8f9fa;
+    padding: 25px;
+    border-bottom: 1px solid #eee;
+}
+
+.login-body {
+    padding: 30px;
+}
+
+.login-footer {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-top: 1px solid #eee;
+    text-align: center;
+}
+
+.password-field {
+    position: relative;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #6c757d;
+}
+
+.btn-login {
+    padding: 10px 20px;
+    font-weight: 500;
+}
