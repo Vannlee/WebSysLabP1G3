@@ -230,26 +230,26 @@ $formattedDate = $joinDate->format('F j, Y');
                     </div>
                     <div class="card-body">
                         <?php if ($user['membership'] == 'basic'): ?>
-                            <p><i class="bi bi-check-circle-fill text-success"></i> ✅1 Hour Gym Access daily</p>
-                            <p><i class="bi bi-x-circle-fill text-danger"></i> ❌Free Locker</p>
-                            <p><i class="bi bi-x-circle-fill text-danger"></i> ❌Protein Shake</p>
-                            <p><i class="bi bi-x-circle-fill text-danger"></i> ❌Gym Item Discounts</p>
-                            <p><i class="bi bi-x-circle-fill text-danger"></i> ❌Personal Trainer</p>
-                            <p><i class="bi bi-x-circle-fill text-danger"></i> ❌VIP Lounge</p>
+                            <p><i class="bi bi-check-circle-fill text-success"></i> 1 Hour Gym Access daily</p>
+                            <p><i class="bi bi-x-circle-fill text-danger"></i> Free Locker</p>
+                            <p><i class="bi bi-x-circle-fill text-danger"></i> Protein Shake</p>
+                            <p><i class="bi bi-x-circle-fill text-danger"></i> Gym Item Discounts</p>
+                            <p><i class="bi bi-x-circle-fill text-danger"></i> Personal Trainer</p>
+                            <p><i class="bi bi-x-circle-fill text-danger"></i> VIP Lounge</p>
                         <?php elseif ($user['membership'] == 'Premium'): ?>
-                            <p><i class="bi bi-check-circle-fill text-success"></i> ✅2 Hour Gym Access daily</p>
-                            <p><i class="bi bi-x-circle-fill text-danger"></i> ✅Free Locker</p>
-                            <p><i class="bi bi-x-circle-fill text-danger"></i> ✅Protein Shake</p>
-                            <p><i class="bi bi-x-circle-fill text-danger"></i> ❌Gym Item Discounts</p>
-                            <p><i class="bi bi-x-circle-fill text-danger"></i> ❌Personal Trainer</p>
-                            <p><i class="bi bi-x-circle-fill text-danger"></i> ❌VIP Lounge</p>
+                            <p><i class="bi bi-check-circle-fill text-success"></i> 2 Hour Gym Access daily</p>
+                            <p><i class="bi bi-check-circle-fill text-success"></i> Free Locker</p>
+                            <p><i class="bi bi-check-circle-fill text-success"></i> Protein Shake</p>
+                            <p><i class="bi bi-x-circle-fill text-danger"></i> Gym Item Discounts</p>
+                            <p><i class="bi bi-x-circle-fill text-danger"></i> Personal Trainer</p>
+                            <p><i class="bi bi-x-circle-fill text-danger"></i> VIP Lounge</p>
                         <?php elseif ($user['membership'] == 'Ultimate'): ?>
-                            <p><i class="bi bi-check-circle-fill text-success"></i> ✅2 Hour Gym Access daily</p>
-                            <p><i class="bi bi-x-circle-fill text-danger"></i> ✅Free Locker</p>
-                            <p><i class="bi bi-x-circle-fill text-danger"></i> ✅Protein Shake</p>
-                            <p><i class="bi bi-x-circle-fill text-danger"></i> ✅Gym Item Discounts</p>
-                            <p><i class="bi bi-x-circle-fill text-danger"></i> ✅Personal Trainer</p>
-                            <p><i class="bi bi-x-circle-fill text-danger"></i> ✅VIP Lounge</p>
+                            <p><i class="bi bi-check-circle-fill text-success"></i> 2 Hour Gym Access daily</p>
+                            <p><i class="bi bi-check-circle-fill text-success"></i> Free Locker</p>
+                            <p><i class="bi bi-check-circle-fill text-success"></i> Protein Shake</p>
+                            <p><i class="bi bi-check-circle-fill text-success"></i> Gym Item Discounts</p>
+                            <p><i class="bi bi-check-circle-fill text-success"></i> Personal Trainer</p>
+                            <p><i class="bi bi-check-circle-fill text-success"></i> VIP Lounge</p>
                         <?php endif; ?>
                     </div>
                 </div>

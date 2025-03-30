@@ -98,12 +98,12 @@
                         <div class="card-body text-center">
                             <h5 class="card-title">Basic</h5>
                             <h6 class="card-subtitle mb-2 text-muted">Free</h6>
-                            <p class="card-text">✅1 Hour Gym Access daily</p>
-                            <p class="card-text">❌Free Locker</p>
-                            <p class="card-text">❌Protein Shake</p>
-                            <p class="card-text">❌Gym Item Discounts</p>
-                            <p class="card-text">❌Personal Trainer</p>
-                            <p class="card-text">❌VIP Lounge</p>
+                            <p><i class="bi bi-check-circle-fill text-success"></i> 1 Hour Gym Access daily</p>
+                            <p><i class="bi bi-x-circle-fill text-danger"></i> Free Locker</p>
+                            <p><i class="bi bi-x-circle-fill text-danger"></i> Protein Shake</p>
+                            <p><i class="bi bi-x-circle-fill text-danger"></i> Gym Item Discounts</p>
+                            <p><i class="bi bi-x-circle-fill text-danger"></i> Personal Trainer</p>
+                            <p><i class="bi bi-x-circle-fill text-danger"></i> VIP Lounge</p>
                             <?php if(isLoggedIn() && getUserMembership() == 'basic'): ?>
                                 <button class="btn btn-success" disabled>Current Plan</button>
                             <?php else: ?>
@@ -122,12 +122,12 @@
                         <div class="card-body text-center">
                             <h5 class="card-title">Premium</h5>
                             <h6 class="card-subtitle mb-2 text-muted">$40/month</h6>
-                            <p class="card-text">✅2 Hour Gym Access daily</p>
-                            <p class="card-text">✅Free Locker</p>
-                            <p class="card-text">✅Protein Shake</p>
-                            <p class="card-text">❌Gym Item Discounts</p>
-                            <p class="card-text">❌Personal Trainer</p>
-                            <p class="card-text">❌VIP Lounge</p>
+                            <p><i class="bi bi-check-circle-fill text-success"></i> 2 Hour Gym Access daily</p>
+                            <p><i class="bi bi-check-circle-fill text-success"></i> Free Locker</p>
+                            <p><i class="bi bi-check-circle-fill text-success"></i> Protein Shake</p>
+                            <p><i class="bi bi-x-circle-fill text-danger"></i> Gym Item Discounts</p>
+                            <p><i class="bi bi-x-circle-fill text-danger"></i> Personal Trainer</p>
+                            <p><i class="bi bi-x-circle-fill text-danger"></i> VIP Lounge</p>
                             <?php if(isLoggedIn() && getUserMembership() == 'Premium'): ?>
                                 <button class="btn btn-success" disabled>Current Plan</button>
                             <?php else: ?>
@@ -146,12 +146,12 @@
                         <div class="card-body text-center">
                             <h5 class="card-title">Ultimate</h5>
                             <h6 class="card-subtitle mb-2 text-muted">$90/month</h6>
-                            <p class="card-text">✅Unlimited Gym Access daily</p>
-                            <p class="card-text">✅Free Locker</p>
-                            <p class="card-text">✅Protein Shake</p>
-                            <p class="card-text">✅Gym Item Discounts</p>
-                            <p class="card-text">✅Personal Trainer</p>
-                            <p class="card-text">✅VIP Lounge</p>
+                            <p><i class="bi bi-check-circle-fill text-success"></i> Unlimited Gym Access daily</p>
+                            <p><i class="bi bi-check-circle-fill text-success"></i> Free Locker</p>
+                            <p><i class="bi bi-check-circle-fill text-success"></i> Protein Shake</p>
+                            <p><i class="bi bi-check-circle-fill text-success"></i> Gym Item Discounts</p>
+                            <p><i class="bi bi-check-circle-fill text-success"></i> Personal Trainer</p>
+                            <p><i class="bi bi-check-circle-fill text-success"></i> VIP Lounge</p>
                             <?php if(isLoggedIn() && getUserMembership() == 'Ultimate'): ?>
                                 <button class="btn btn-success" disabled>Current Plan</button>
                             <?php else: ?>

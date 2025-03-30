@@ -53,20 +53,18 @@
                         </div>
                     </div>
                     
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between">
-                            <label for="pwd" class="form-label">Password</label>
-                            <a href="forgot-password.php" class="text-decoration-none small">Forgot password?</a>
-                        </div>
-                        <div class="input-group password-field">
-                            <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-                            <input required type="password" id="pwd" name="pwd" class="form-control"
-                                placeholder="Enter your password">
-                            <span class="password-toggle" id="togglePassword">
-                                <i class="bi bi-eye"></i>
-                            </span>
-                        </div>
-                    </div>
+                        <!-- Fixed password field HTML -->
+<div class="mb-3">
+    <label for="pwd" class="form-label">Password</label>
+    <div class="input-group password-field">
+        <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+        <input required type="password" id="pwd" name="pwd" class="form-control"
+            placeholder="Enter your password">
+        <span class="password-toggle" id="togglePassword">
+            <i class="bi bi-eye"></i>
+        </span>
+    </div>
+</div>
                     
                     <div class="mb-4 form-check">
                         <input type="checkbox" id="remember" name="remember" class="form-check-input">
@@ -74,7 +72,7 @@
                     </div>
                     
                     <div class="d-grid">
-                        <button type="submit" class="btn btn-primary btn-login">Sign In</button>
+                        <button type="submit" class="btn btn-primary btn-login px-5">Sign In</button>
                     </div>
                 </form>
             </div>
