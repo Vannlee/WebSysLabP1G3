@@ -43,7 +43,7 @@
                     <h2>Our Mission</h2>
                     <p class="lead">To empower individuals to transform their lives through fitness in a supportive, inclusive environment.</p>
                 </div>
-                <div class="row g-4">
+                    <div class="row g-4">
                     <div class="col-md-4">
                         <div class="card h-100 border-0 shadow-sm">
                             <div class="card-body text-center">
