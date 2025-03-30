@@ -101,7 +101,7 @@ function registerUser() {
     $hashed_password = password_hash($pwd, PASSWORD_DEFAULT);
 
     // Insert new user into the database
-    $stmt = $conn->prepare("INSERT INTO gymbros_members (fname, lname, email, contact, password, datejoin, membership) VALUES (?, ?, ?, ?, ?, NOW(), 'basic')");
+    $stmt = $conn->prepare("INSERT INTO gymbros_members (fname, lname, email, contact, password, datejoin, membership) VALUES (?, ?, ?, ?, ?, NOW(), 'Basic')");
     $stmt->bind_param("sssss", $fname, $lname, $email, $contact, $hashed_password);
 
     if (!$stmt->execute()) {
