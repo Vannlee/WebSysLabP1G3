@@ -177,6 +177,9 @@ $formattedDate = $joinDate->format('F j, Y');
                     <input type="hidden" name="member_id" value="<?php echo htmlspecialchars($user['member_id']); ?>">
                     <input type="hidden" name="action_type" value="update_password">
                     
+                    <!-- Hidden field to ensure email is never null -->
+                    <input type="hidden" name="email" value="<?php echo htmlspecialchars($user['email']); ?>">
+
                     <div class="mb-3">
                         <label for="current_pwd_security" class="form-label">Current Password</label>
                         <input type="password" id="current_pwd_security" name="current_pwd" class="form-control" required>
