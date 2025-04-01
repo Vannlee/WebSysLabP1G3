@@ -25,7 +25,7 @@ if ($conn->connect_error) {
     die("Database connection failed: " . $conn->connect_error);
 }
 
-// ----------------- DELETE PROFILE -------------------
+// 1) DELETE PROFILE
 if ($action_type === "delete") {
     $current_pwd = $_POST["current_pwd"] ?? '';
     
@@ -40,7 +40,6 @@ if ($action_type === "delete") {
         $success = false;
         $errorMsg = "Incorrect password.";
     } else {
-        // Delete user
         $stmt = $conn->prepare("DELETE FROM gymbros_members WHERE member_id=?");
         $stmt->bind_param("i", $member_id);
         $stmt->execute();
@@ -48,7 +47,7 @@ if ($action_type === "delete") {
         session_destroy();
     }
 
-// ----------------- UPDATE PROFILE (fname/lname/contact/email) -------------------
+// 2) UPDATE PROFILE (fname/lname/contact/email)
 } elseif ($action_type === "update_profile") {
     $fname       = sanitize_input($_POST["fname"]  ?? "");
     $lname       = sanitize_input($_POST["lname"]  ?? "");
@@ -61,7 +60,7 @@ if ($action_type === "delete") {
         $email = $_SESSION["email"];
     }
 
-    // Verify password
+    // Verify current password
     $stmt = $conn->prepare("SELECT password FROM gymbros_members WHERE member_id=?");
     $stmt->bind_param("i", $member_id);
     $stmt->execute();
@@ -74,7 +73,6 @@ if ($action_type === "delete") {
         $success = false;
     }
 
-    // If everything is OK, update
     if ($success) {
         $stmt = $conn->prepare("UPDATE gymbros_members SET fname=?, lname=?, email=?, contact=? WHERE member_id=?");
         $stmt->bind_param("ssssi", $fname, $lname, $email, $contact, $member_id);
@@ -89,7 +87,7 @@ if ($action_type === "delete") {
         $stmt->close();
     }
 
-// ----------------- UPDATE PASSWORD ONLY -------------------
+// 3) UPDATE PASSWORD ONLY
 } elseif ($action_type === "update_password") {
     $current_pwd = $_POST["current_pwd"] ?? "";
     $new_pwd     = $_POST["new_pwd"]     ?? "";
@@ -109,7 +107,7 @@ if ($action_type === "delete") {
         $success = false;
     }
 
-    // Verify user password from DB
+    // Verify current password
     $stmt = $conn->prepare("SELECT password FROM gymbros_members WHERE member_id=?");
     $stmt->bind_param("i", $member_id);
     $stmt->execute();
@@ -122,7 +120,6 @@ if ($action_type === "delete") {
         $success = false;
     }
 
-    // If OK, update password
     if ($success) {
         $hashed_pwd = password_hash($new_pwd, PASSWORD_DEFAULT);
         $stmt = $conn->prepare("UPDATE gymbros_members SET password=?, email=? WHERE member_id=?");
@@ -138,10 +135,51 @@ if ($action_type === "delete") {
 
 $conn->close();
 
-// ----------------- OUTPUT RESULT -------------------
+// ================== OUTPUT WITH NAV & FOOTER ==================
 if ($success) {
-    echo "<title>Success</title><main class='container'><h3>Action completed successfully.</h3><a href='profile.php' class='btn btn-success'>Return to Profile</a></main>";
+    // Successful action
+    ?>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <title>Action Completed | GymBros</title>
+        <?php
+        include "inc/head.inc.php";
+        include "inc/enablejs.inc.php";
+        ?>
+    </head>
+    <body>
+    <?php include "inc/nav.inc.php"; ?>
+    <main class="container py-5">
+        <h3 class="text-success">Action completed successfully.</h3>
+        <p><a href="profile.php" class="btn btn-success">Return to Profile</a></p>
+    </main>
+    <?php include "inc/footer.inc.php"; ?>
+    </body>
+    </html>
+    <?php
 } else {
-    echo "<title>Error</title><main class='container'><h3>Action failed.</h3><p>$errorMsg</p><a href='profile.php' class='btn btn-warning'>Try Again</a></main>";
+    // Action failed
+    ?>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <title>Action Failed | GymBros</title>
+        <?php
+        include "inc/head.inc.php";
+        include "inc/enablejs.inc.php";
+        ?>
+    </head>
+    <body>
+    <?php include "inc/nav.inc.php"; ?>
+    <main class="container py-5">
+        <h3 class="text-danger">Action failed.</h3>
+        <p><?php echo $errorMsg; ?></p>
+        <p><a href="profile.php" class="btn btn-warning">Try Again</a></p>
+    </main>
+    <?php include "inc/footer.inc.php"; ?>
+    </body>
+    </html>
+    <?php
 }
 ?>
