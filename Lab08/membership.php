@@ -63,12 +63,12 @@
         if (getUserMembership() != $newPlan) {
             if ($newPlan == "basic") {
                 echo "<script>
-                        var confirmAction = confirm('Are you sure you want to delete this?');
+                        var confirmAction = confirm('Are you sure you want to change to Basic membership?');
                         if (confirmAction) {
-                            window.location.href = 'delete.php'; // Redirect to delete action
+                            // Store the new plan selection in session
+                            window.location.href = 'update_membership.php?newplan=$newplan'; // Redirect to update membership
                         }
                     </script>";
-                
             }
             else {
                 // Store the new plan selection in session
