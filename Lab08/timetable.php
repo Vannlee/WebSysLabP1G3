@@ -1,25 +1,33 @@
 <?php
+/**
+ * Timetable page for Group 3's Gym website
+ * Displays available gym sessions and allows users to book them
+ */
 session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-// Check if the user is logged in.
+
+// Check if the user is logged in. If not, redirect to login page
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit;
 }
 
+// Get the selected date from URL parameters or default to today
 $selected_date = isset($_GET['date']) ? $_GET['date'] : date('Y-m-d');
-$current_datetime = new DateTime();
+$current_datetime = new DateTime(); 
 
+// Get database configuration
 $config = parse_ini_file('/var/www/private/db-config.ini');
-$conn = new mysqli($config['servername'], $config['username'], $config['password'], $config['dbname']);
 
+// Connect to database using mysqli
+$conn = new mysqli($config['servername'], $config['username'], $config['password'], $config['dbname']);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
 try {
-    // Using the variables from the config
+    // Connect to database using PDO (for prepared statements)
     $host = $config['servername'];
     $user = $config['username'];
     $pass = $config['password'];
@@ -31,7 +39,7 @@ try {
     die("Database connection failed: " . $e->getMessage());
 }
 
-// Retrieve location data directly from the location table
+// Retrieve location data with all needed columns
 $query = "
     SELECT loc_id, loc_name, morning_slot, afternoon_slot, slots_availability 
     FROM Gymbros.location 
@@ -42,17 +50,19 @@ $stmt = $pdo->prepare($query);
 $stmt->execute();
 $locations = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Create morning and afternoon slots based on location data
+// Arrays to store processed slot data
 $morning_slots = [];
 $afternoon_slots = [];
 
+// Process each location to extract slot information
 foreach ($locations as $location) {
-    // Create morning slot data if available
+    // Process morning slots if available
     if (!empty($location['morning_slot'])) {
         // Extract time from morning_slot field
         $morning_time = $location['morning_slot'];
         
         // Calculate slots left based on bookings
+        // Uses 'slot' column in the booking table
         $slots_query = "
             SELECT COUNT(*) as booked_count 
             FROM booking 
@@ -64,6 +74,7 @@ foreach ($locations as $location) {
         $booked_count = isset($booking_data['booked_count']) ? $booking_data['booked_count'] : 0;
         $slots_left = $location['slots_availability'] - $booked_count;
         
+        // Add to morning slots array
         $morning_slots[] = [
             'loc_id' => $location['loc_id'],
             'loc_name' => $location['loc_name'],
@@ -74,7 +85,7 @@ foreach ($locations as $location) {
         ];
     }
     
-    // Create afternoon slot data if available
+    // Process afternoon slots if available
     if (!empty($location['afternoon_slot'])) {
         // Extract time from afternoon_slot field
         $afternoon_time = $location['afternoon_slot'];
@@ -91,6 +102,7 @@ foreach ($locations as $location) {
         $booked_count = isset($booking_data['booked_count']) ? $booking_data['booked_count'] : 0;
         $slots_left = $location['slots_availability'] - $booked_count;
         
+        // Add to afternoon slots array
         $afternoon_slots[] = [
             'loc_id' => $location['loc_id'],
             'loc_name' => $location['loc_name'],
@@ -155,20 +167,27 @@ usort($afternoon_slots, function($a, $b) {
                     </thead>
                     <tbody>
                         <?php foreach ($morning_slots as $slot): 
-                            // Parse the time, handling possible ranges like "04:00 - 12:00"
+                            // Parse the time, handling possible time formats
                             $time_str = $slot['slot_time'];
                             if (strpos($time_str, '-') !== false) {
                                 $parts = explode('-', $time_str);
-                                $start_time = trim($parts[0]); // use the first part as the start time
+                                $start_time = trim($parts[0]); // Use the first part as the start time
                             } else {
                                 $start_time = trim($time_str);
                             }
+                            
+                            // Create datetime objects for display and comparison
                             $start_dt = new DateTime($selected_date . ' ' . $start_time);
                             $end_dt = clone $start_dt;
                             $end_dt->modify('+1 hour');
                             
-                            // Handle past times and full slots
-                            $is_passed = ($selected_date === date('Y-m-d') && $start_dt < $current_datetime);
+                            // Check if slot is in the past for current day
+                            $is_passed = false;
+                            if ($selected_date === date('Y-m-d')) {
+                                $is_passed = ($start_dt < $current_datetime);
+                            }
+                            
+                            // Check if slot is full
                             $is_full = ($slot['slots_left'] <= 0);
                         ?>
                             <tr>
@@ -185,7 +204,12 @@ usort($afternoon_slots, function($a, $b) {
                                     <?php endif; ?>
                                 </td>
                                 <td>
-                                    <?php if (!$is_passed && !$is_full): ?>
+                                    <?php 
+                                    // Only show booking button if:
+                                    // 1. The slot is not full
+                                    // 2. The slot is not in the past OR it's a future date
+                                    if (!$is_full && (!$is_passed || $selected_date > date('Y-m-d'))): 
+                                    ?>
                                         <form action="process_timetable.php" method="POST">
                                             <input type="hidden" name="date" value="<?php echo htmlspecialchars($selected_date); ?>">
                                             <input type="hidden" name="loc_id" value="<?php echo htmlspecialchars($slot['loc_id']); ?>">
@@ -220,7 +244,7 @@ usort($afternoon_slots, function($a, $b) {
                     </thead>
                     <tbody>
                     <?php foreach ($afternoon_slots as $slot): 
-                        // Parse the time, handling possible ranges like "04:00 - 12:00"
+                        // Parse the time, handling possible time formats
                         $time_str = $slot['slot_time'];
                         if (strpos($time_str, '-') !== false) {
                             $parts = explode('-', $time_str);
@@ -228,11 +252,19 @@ usort($afternoon_slots, function($a, $b) {
                         } else {
                             $start_time = trim($time_str);
                         }
+                        
+                        // Create datetime objects for display and comparison
                         $start_dt = new DateTime($selected_date . ' ' . $start_time);
                         $end_dt = clone $start_dt;
                         $end_dt->modify('+1 hour');
                         
-                        $is_passed = ($selected_date === date('Y-m-d') && $start_dt < $current_datetime);
+                        // Check if slot is in the past for current day
+                        $is_passed = false;
+                        if ($selected_date === date('Y-m-d')) {
+                            $is_passed = ($start_dt < $current_datetime);
+                        }
+                        
+                        // Check if slot is full
                         $is_full = ($slot['slots_left'] <= 0);
                     ?>
                         <tr>
@@ -249,7 +281,12 @@ usort($afternoon_slots, function($a, $b) {
                                 <?php endif; ?>
                             </td>
                             <td>
-                                <?php if (!$is_passed && !$is_full): ?>
+                                <?php 
+                                // Only show booking button if:
+                                // 1. The slot is not full
+                                // 2. The slot is not in the past OR it's a future date
+                                if (!$is_full && (!$is_passed || $selected_date > date('Y-m-d'))): 
+                                ?>
                                     <form action="process_timetable.php" method="POST">
                                         <input type="hidden" name="date" value="<?php echo htmlspecialchars($selected_date); ?>">
                                         <input type="hidden" name="loc_id" value="<?php echo htmlspecialchars($slot['loc_id']); ?>">

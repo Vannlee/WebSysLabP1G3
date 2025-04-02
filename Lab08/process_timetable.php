@@ -130,16 +130,12 @@ echo "</main>";
 // Include the footer
 include "inc/footer.inc.php";
 
-/**
- * Sanitize user input.
- */
+// Sanitize user input.
 function sanitize_input($data) {
     return htmlspecialchars(stripslashes(trim($data)));
 }
 
-/**
- * Process the booking by inserting a new record into the database.
- */
+// Process the booking by inserting a new record into the database.
 function processBooking($member_id, $location, $bookingDate, $class, $instructor, $sessionTime, $slotTime) {
     global $errorMsg, $success;
 
