@@ -12,23 +12,19 @@ $success = true;
 
 // Ensure the request is a POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    // Redirect or handle the error
     header("Location: booking.php");
     exit();
 }
 
 // Validate required fields
-if (empty($_POST["bookingDate"]) || empty($_POST["location"])) {
-    $errorMsg .= "Booking date and location are required.<br>";
+if (empty($_POST["bookingDate"]) || empty($_POST["slot"]) || empty($_POST["location"])) {
+    $errorMsg .= "Date, slot, and location are required.<br>";
     $success = false;
 } else {
     // Sanitize inputs
     $bookingDate = sanitize_input($_POST["bookingDate"]);
+    $slot = sanitize_input($_POST["slot"]);
     $location = sanitize_input($_POST["location"]);
-
-    // Hidden or default values for class and instructor
-    $class = isset($_POST["class"]) ? sanitize_input($_POST["class"]) : "Yoga";
-    $instructor = isset($_POST["instructor"]) ? sanitize_input($_POST["instructor"]) : "Jane Doe";
 }
 
 // Check if the user is logged in
@@ -41,7 +37,7 @@ if (!isset($_SESSION['user_id'])) {
 
 // If everything is okay so far, process the booking
 if ($success) {
-    processBooking($member_id, $location, $bookingDate, $class, $instructor);
+    processBooking($member_id, $location, $bookingDate, $slot);
 }
 
 // Display success or error message
@@ -60,7 +56,6 @@ if ($success) {
     echo "</main>";
 }
 
-// Include the footer
 include "inc/footer.inc.php";
 
 /**
@@ -73,7 +68,7 @@ function sanitize_input($data) {
 /**
  * Process the booking by inserting a new record into the database.
  */
-function processBooking($member_id, $location, $bookingDate, $class, $instructor) {
+function processBooking($member_id, $location, $bookingDate, $slot) {
     global $errorMsg, $success;
 
     // Read database credentials from a secure config file
@@ -87,8 +82,11 @@ function processBooking($member_id, $location, $bookingDate, $class, $instructor
         return;
     }
 
-    // Prepare the INSERT statement
-    $stmt = $conn->prepare("INSERT INTO booking (member_id, loc_id, date, class, instructor) VALUES (?, ?, ?, ?, ?)");
+    // Insert statement (we assume 'created' and 'last_update' are auto-handled in the DB schema)
+    $stmt = $conn->prepare(
+        "INSERT INTO booking (member_id, loc_id, date, slot) 
+         VALUES (?, ?, ?, ?)"
+    );
     if (!$stmt) {
         $errorMsg .= "Prepare failed: " . $conn->error;
         $success = false;
@@ -96,7 +94,7 @@ function processBooking($member_id, $location, $bookingDate, $class, $instructor
     }
 
     // Bind parameters and execute
-    $stmt->bind_param("iisss", $member_id, $location, $bookingDate, $class, $instructor);
+    $stmt->bind_param("iiss", $member_id, $location, $bookingDate, $slot);
     if (!$stmt->execute()) {
         $errorMsg .= "Error inserting booking: " . $stmt->error;
         $success = false;
