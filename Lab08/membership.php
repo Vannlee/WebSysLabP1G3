@@ -61,12 +61,24 @@
         // User is logged in and selected a new plan
         $newPlan = $_GET['select'];
         if (getUserMembership() != $newPlan) {
-            // Store the new plan selection in session
-            $_SESSION['selected_membership'] = $newPlan;
-            // Redirect to payment page
-            header("Location: payment.php");
-            exit();
+            if ($newPlan == "basic") {
+                echo "<script>
+                        var confirmAction = confirm('Are you sure you want to delete this?');
+                        if (confirmAction) {
+                            window.location.href = 'delete.php'; // Redirect to delete action
+                        }
+                    </script>";
+                
+            }
+            else {
+                // Store the new plan selection in session
+                $_SESSION['selected_membership'] = $newPlan;
+                // Redirect to payment page
+                header("Location: payment.php");
+                exit();
+            }
         }
+        
     }
 ?>
 <!DOCTYPE html>
