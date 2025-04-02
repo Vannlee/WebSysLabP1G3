@@ -29,7 +29,7 @@
                 </div>
                 <div class="row align-items-center">
                     <div class="col-lg-6">
-                        <img src="images/instr_sm.jpg" alt="Instructor Michael Chen" class="img-fluid rounded shadow">
+                        <img src="images/instr_sm.jpg" alt="Instructor Sarah Martinez" class="img-fluid rounded shadow">
                     </div>
                     <div class="col-lg-6 mb-4 mb-lg-0">
                         <h2>Sarah Martinez</h2>
@@ -42,12 +42,12 @@
                         <p>Tough but fair, Mack believes in discipline and consistency over quick fixes. His no-excuses attitude is balanced by his genuine care for his clients — he will push you past your limits, but he will also be the first to check in on you afterward.</p>
                     </div>
                     <div class="col-lg-6">
-                        <img src="images/instr_jj.jpg" alt="Instructor Michael Chen" class="img-fluid rounded shadow">
+                        <img src="images/instr_jj.jpg" alt="Instructor Mack" class="img-fluid rounded shadow">
                     </div>
                 </div>
                 <div class="row align-items-center">
                     <div class="col-lg-6">
-                        <img src="images/instr_ar.jpg" alt="Instructor Michael Chen" class="img-fluid rounded shadow">
+                        <img src="images/instr_ar.jpg" alt="Instructor Alyssa Reed" class="img-fluid rounded shadow">
                     </div>
                     <div class="col-lg-6 mb-4 mb-lg-0">
                         <h2>Alyssa Reed</h2>
