@@ -3,7 +3,7 @@ session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Include common head and nav sections if desired
+// Include common head and nav sections
 include "inc/head.inc.php";
 include "inc/nav.inc.php";
 
