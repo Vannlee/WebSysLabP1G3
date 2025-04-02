@@ -189,7 +189,7 @@
                             </div>
                         </div>
                         
-                        <form method="post" action="">
+                        <form method="post" action="process_payment.php">
                             <div class="mb-3">
                                 <label for="card_name" class="form-label">Name on Card</label>
                                 <input type="text" class="form-control" id="card_name" name="card_name" required>
