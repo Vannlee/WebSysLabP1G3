@@ -82,7 +82,7 @@
                       </table>';
             }
             else {
-                echo '<h3>No Membership Feedback records found</h3>';
+                echo '<h5>No Membership Feedback records found</h5>';
             }
 
             $stmt->close();
