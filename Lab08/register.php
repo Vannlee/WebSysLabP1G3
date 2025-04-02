@@ -5,6 +5,7 @@
         <?php
             include "inc/head.inc.php";
         ?>
+        <link rel="stylesheet" href="css/register.css">
     </head>
 
     <body>

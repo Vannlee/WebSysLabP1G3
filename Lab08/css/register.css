@@ -1,0 +1,126 @@
+/* Modern Registration Page Styles */
+
+:root {
+    --primary-color: #4361ee;
+    --primary-hover: #3a56d4;
+    --error-color: #ef476f;
+    --success-color: #06d6a0;
+    /* Removed text-color variable to keep your original font color */
+    --text-light: #8d99ae;
+    --background: #f8f9fa;
+    --card-bg: #ffffff;
+    --border-radius: 8px;
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    --transition: all 0.3s ease;
+}
+
+/* Removed font-family and color from body to keep your original settings */
+body {
+    background-color: var(--background);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 600px;
+    padding: 2rem;
+}
+
+main#main-content {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 2.5rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+h1 {
+    /* Removed color to keep original */
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+}
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+a:hover {
+    color: var(--primary-hover);
+    text-decoration: underline;
+}
+
+.form-label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    /* Removed color override to keep original */
+}
+
+.form-control {
+    border-radius: var(--border-radius);
+    padding: 0.75rem 1rem;
+    border: 1px solid #ddd;
+    transition: var(--transition);
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(67, 97, 238, 0.15);
+}
+
+.form-control::placeholder {
+    color: var(--text-light);
+    opacity: 0.7;
+}
+
+.form-check-input {
+    cursor: pointer;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover, .btn-primary:focus {
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.text-danger {
+    color: var(--error-color) !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    main#main-content {
+        padding: 1.5rem;
+    }
+    
+    .container {
+        padding: 1rem;
+    }
+}
+
+/* Animation for form elements */
+.mb-3 {
+    transition: transform 0.2s ease;
+}
+
+.form-control:focus + .mb-3 {
+    transform: translateY(-2px);
+}
