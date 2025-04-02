@@ -44,7 +44,7 @@ $formattedDate = $joinDate->format('F j, Y');
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>My Profile - GymBros</title>
+    <title>My Profile - Gymbros</title>
     <?php
         include "inc/head.inc.php";
         include "inc/enablejs.inc.php";
