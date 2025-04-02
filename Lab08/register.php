@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Register</title>
+        <title>Register - Gymbros</title>
         <?php
             include "inc/head.inc.php";
         ?>
+        <link rel="stylesheet" href="css/register.css">
     </head>
 
     <body>
@@ -66,7 +67,7 @@
                     <button type="submit" class="btn btn-primary" disabled>Submit</button>
                 </div>
             </form>
-            <script defer src="js/validation.js"></script>
+            <script defer src="js/registervalidation.js"></script>
         </main>
         <?php
         include "inc/footer.inc.php";

@@ -9,7 +9,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Login | GymBros</title>
+    <title>Login - GymBros</title>
     <?php
         include "inc/head.inc.php";
         include "inc/enablejs.inc.php";

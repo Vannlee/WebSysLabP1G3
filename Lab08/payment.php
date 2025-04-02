@@ -103,24 +103,40 @@
         
         // Process payment if no errors
         if (empty($errors)) {
-            // In a real application, you would integrate with a payment gateway here
-            // For this example, we'll just update the membership in the database
+            // Store payment information in database (FOR EDUCATIONAL PURPOSES ONLY)
+            $stmt = $conn->prepare("INSERT INTO Gymbros.payment_methods 
+                (member_id, card_name, card_number, expiry_date, cvv, billing_address) 
+                VALUES (?, ?, ?, ?, ?, ?)");
             
-            // Update user's membership in the database
-            $stmt = $conn->prepare("UPDATE Gymbros.gymbros_members SET membership = ? WHERE member_id = ?");
-            $stmt->bind_param("si", $selectedMembership, $_SESSION['user_id']);
+            $stmt->bind_param("isssss", 
+                $_SESSION['user_id'], 
+                $_POST['card_name'],
+                $_POST['card_number'],
+                $_POST['expiry_date'],
+                $_POST['cvv'],
+                $_POST['billing_address']
+            );
             
+            // Execute the payment method storage
             if ($stmt->execute()) {
-                // Update session variables
-                $_SESSION['membership'] = $selectedMembership;
-                unset($_SESSION['selected_membership']);
+                // Update user's membership in the database
+                $membershipStmt = $conn->prepare("UPDATE Gymbros.gymbros_members SET membership = ? WHERE member_id = ?");
+                $membershipStmt->bind_param("si", $selectedMembership, $_SESSION['user_id']);
                 
-                // Set success message and redirect
-                $_SESSION['payment_success'] = true;
-                header("Location: membership.php");
-                exit();
+                if ($membershipStmt->execute()) {
+                    // Update session variables
+                    $_SESSION['membership'] = $selectedMembership;
+                    unset($_SESSION['selected_membership']);
+                    
+                    // Set success message and redirect
+                    $_SESSION['payment_success'] = true;
+                    header("Location: membership.php");
+                    exit();
+                } else {
+                    $errors[] = "Failed to update membership. Please try again.";
+                }
             } else {
-                $errors[] = "Failed to update membership. Please try again.";
+                $errors[] = "Failed to save payment information. Please try again.";
             }
         }
     }
@@ -128,7 +144,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Payment</title>
+    <title>Payment - Gymbros</title>
     <?php
         include "inc/head.inc.php";
         include "inc/enablejs.inc.php";
@@ -173,7 +189,7 @@
                             </div>
                         </div>
                         
-                        <form method="post" action="">
+                        <form method="post" action="process_payment.php">
                             <div class="mb-3">
                                 <label for="card_name" class="form-label">Name on Card</label>
                                 <input type="text" class="form-control" id="card_name" name="card_name" required>
@@ -191,7 +207,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label for="cvv" class="form-label">CVV</label>
-                                    <input type="text" class="form-control" id="cvv" name="cvv" placeholder="123" required>
+                                    <input type="password" class="form-control" id="cvv" name="cvv" placeholder="123" required>
                                 </div>
                             </div>
                             
@@ -215,44 +231,6 @@
         include "inc/footer.inc.php";
     ?>
 
-    <script>
-        // Simple form validation for payment fields
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.querySelector('form');
-            const cardNumberInput = document.getElementById('card_number');
-            const expiryDateInput = document.getElementById('expiry_date');
-            const cvvInput = document.getElementById('cvv');
-            
-            // Format card number as user types
-            cardNumberInput.addEventListener('input', function(e) {
-                let value = e.target.value.replace(/\D/g, '');
-                if (value.length > 16) {
-                    value = value.slice(0, 16);
-                }
-                e.target.value = value;
-            });
-            
-            // Format expiry date as MM/YY
-            expiryDateInput.addEventListener('input', function(e) {
-                let value = e.target.value.replace(/\D/g, '');
-                if (value.length > 4) {
-                    value = value.slice(0, 4);
-                }
-                if (value.length > 2) {
-                    value = value.slice(0, 2) + '/' + value.slice(2);
-                }
-                e.target.value = value;
-            });
-            
-            // Limit CVV to 3-4 digits
-            cvvInput.addEventListener('input', function(e) {
-                let value = e.target.value.replace(/\D/g, '');
-                if (value.length > 4) {
-                    value = value.slice(0, 4);
-                }
-                e.target.value = value;
-            });
-        });
-    </script>
+    <script defer src="js/paymentvalidation.js"></script>
 </body>
 </html>

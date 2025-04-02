@@ -44,53 +44,13 @@ $formattedDate = $joinDate->format('F j, Y');
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>My Profile | GymBros</title>
+    <title>My Profile - GymBros</title>
     <?php
         include "inc/head.inc.php";
         include "inc/enablejs.inc.php";
     ?>
-    <style>
-        .profile-header {
-            background-color: #f8f9fa;
-            border-radius: 10px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-        
-        .profile-avatar {
-            width: 100px;
-            height: 100px;
-            background-color: #e9ecef;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            color: #6c757d;
-            margin-right: 20px;
-        }
-        
-        .tab-content {
-            padding: 30px;
-            background-color: #fff;
-            border-radius: 0 0 10px 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-        
-        .nav-tabs .nav-link {
-            border-radius: 10px 10px 0 0;
-            color: black;
-        }
-        
-        .danger-zone {
-            background-color: #fff5f5;
-            border-radius: 10px;
-            padding: 25px;
-            margin-top: 30px;
-            border: 1px solid #ffe5e5;
-        }
-    </style>
+    <link rel="stylesheet" href="css/profile.css">
+
 </head>
 <body>
     <?php include "inc/nav.inc.php"; ?>

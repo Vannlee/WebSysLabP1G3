@@ -41,7 +41,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Gymbros</title>
+        <title>Bookings - Gymbros</title>
         <?php
             include "inc/head.inc.php";
         ?>
