@@ -142,7 +142,7 @@ if ($success) {
     <!DOCTYPE html>
     <html lang="en">
     <head>
-        <title>Action Completed | GymBros</title>
+        <title>Action Completed - GymBros</title>
         <?php
         include "inc/head.inc.php";
         include "inc/enablejs.inc.php";
@@ -164,7 +164,7 @@ if ($success) {
     <!DOCTYPE html>
     <html lang="en">
     <head>
-        <title>Action Failed | GymBros</title>
+        <title>Action Failed - GymBros</title>
         <?php
         include "inc/head.inc.php";
         include "inc/enablejs.inc.php";

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Register</title>
+        <title>Register - Gymbros</title>
         <?php
             include "inc/head.inc.php";
         ?>

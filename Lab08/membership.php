@@ -72,7 +72,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Membership</title>
+    <title>Membership - Gymbros</title>
     <?php
         include "inc/head.inc.php";
         include "inc/enablejs.inc.php";

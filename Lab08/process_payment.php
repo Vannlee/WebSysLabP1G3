@@ -227,7 +227,7 @@ ob_start();
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Payment Failed</title>
+    <title>Payment Failed - Gymbros</title>
     <?php include "inc/head.inc.php"; ?>
 </head>
 <body>

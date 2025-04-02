@@ -144,7 +144,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Payment</title>
+    <title>Payment - Gymbros</title>
     <?php
         include "inc/head.inc.php";
         include "inc/enablejs.inc.php";

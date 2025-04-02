@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Fitness Gym</title>      
+        <title>Fitness Gym - Gymbros</title>      
         <meta name="description" content="Fitness Gym - Landing Page"/>
         <?php
             include "inc/head.inc.php";
