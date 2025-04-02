@@ -66,7 +66,7 @@
                         var confirmAction = confirm('Are you sure you want to change to Basic membership?');
                         if (confirmAction) {
                             // Store the new plan selection in session
-                            window.location.href = 'update_membership.php?newplan=$newplan'; // Redirect to update membership
+                            window.location.href = 'update_membership.php?newplan=basic'; // Redirect to update membership
                         }
                     </script>";
             }

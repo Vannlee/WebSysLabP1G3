@@ -56,94 +56,37 @@
         exit();
     }
     
-    if (isset($_GET['newplan']) && !isLoggedIn()) {
-        // User clicked a membership but isn't logged in, store selection in session
-        $_SESSION['selected_membership'] = $_GET['newplan'];
-        // Redirect to login page
-        header("Location: login.php");
-        exit();
-    } elseif (isset($_GET['newplan']) && isLoggedIn()) {
-        // User is logged in and selected a new plan
+    if (isset($_GET['newplan']) && isLoggedIn()) {
+        // User is logged in and selected a new membership
         $newPlan = $_GET['newplan'];
 
-        // Get current and selected membership
-        $currentMembership = getUserMembership();
-        $selectedMembership = $_SESSION['selected_membership'];
-        
-    }
-    
-    
-    
-    // If current and selected memberships are the same, redirect to membership page
-    if ($currentMembership === $selectedMembership) {
-        header("Location: membership.php");
-        exit();
-    }
-    
-    // Get membership details
-    $memberships = [
-        'basic' => ['name' => 'Basic', 'price' => 0],
-        'Premium' => ['name' => 'Premium', 'price' => 40],
-        'Ultimate' => ['name' => 'Ultimate', 'price' => 90]
-    ];
-    
-    // Handle payment submission
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_payment'])) {
-        // Validate payment form
-        $errors = [];
-        
-        if (empty($_POST['card_name'])) {
-            $errors[] = "Name on card is required";
-        }
-        
-        if (empty($_POST['card_number']) || !preg_match('/^[0-9]{16}$/', $_POST['card_number'])) {
-            $errors[] = "Valid 16-digit card number is required";
-        }
-        
-        if (empty($_POST['expiry_date']) || !preg_match('/^(0[1-9]|1[0-2])\/[0-9]{2}$/', $_POST['expiry_date'])) {
-            $errors[] = "Valid expiry date (MM/YY) is required";
-        }
-        
-        if (empty($_POST['cvv']) || !preg_match('/^[0-9]{3,4}$/', $_POST['cvv'])) {
-            $errors[] = "Valid CVV is required";
-        }
-        
-        // Process payment if no errors
-        if (empty($errors)) {
-            // Store payment information in database (FOR EDUCATIONAL PURPOSES ONLY)
-            $stmt = $conn->prepare("INSERT INTO Gymbros.payment_methods 
-                (member_id, card_name, card_number, expiry_date, cvv, billing_address) 
-                VALUES (?, ?, ?, ?, ?, ?)");
-            
-            $stmt->bind_param("isssss", 
-                $_SESSION['user_id'], 
-                $_POST['card_name'],
-                $_POST['card_number'],
-                $_POST['expiry_date'],
-                $_POST['cvv'],
-                $_POST['billing_address']
-            );
-            
-            // Execute the payment method storage
-            if ($stmt->execute()) {
+        if ($newPlan != 'basic') {
+            // Prevent updating of other membership types here
+            header("Location: membership.php");
+        } else {
+            // Get current membership
+            $currentMembership = getUserMembership();
+
+            // If current and selected memberships are the same, redirect to membership page
+            if ($currentMembership === $newPlan) {
+                header("Location: membership.php");
+                exit();
+            } else {
                 // Update user's membership in the database
                 $membershipStmt = $conn->prepare("UPDATE Gymbros.gymbros_members SET membership = ? WHERE member_id = ?");
-                $membershipStmt->bind_param("si", $selectedMembership, $_SESSION['user_id']);
+                $membershipStmt->bind_param("si", $newPlan, $_SESSION['user_id']);
                 
                 if ($membershipStmt->execute()) {
                     // Update session variables
-                    $_SESSION['membership'] = $selectedMembership;
-                    unset($_SESSION['selected_membership']);
+                    $_SESSION['membership'] = $newPlan;
                     
                     // Set success message and redirect
                     $_SESSION['payment_success'] = true;
-                    header("Location: membership.php");
+                    header("Location: leave_feedback.php");
                     exit();
                 } else {
                     $errors[] = "Failed to update membership. Please try again.";
                 }
-            } else {
-                $errors[] = "Failed to save payment information. Please try again.";
             }
         }
     }

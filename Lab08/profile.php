@@ -53,7 +53,10 @@ $formattedDate = $joinDate->format('F j, Y');
 
 </head>
 <body>
-    <?php include "inc/nav.inc.php"; ?>
+    <?php 
+        include "inc/nav.inc.php";
+        include "inc/enablejs.inc.php";
+    ?>
     
     <main class="container py-5">
         <div class="profile-header d-flex align-items-center">

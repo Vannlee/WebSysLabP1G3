@@ -86,7 +86,7 @@
         }
 
         function displayWelcome() {
-            if (isset($_SESSION['user_id'])) {
+            if (isset($_SESSION['email'])) {
                 $config = parse_ini_file('/var/www/private/db-config.ini');
                 $conn = new mysqli($config['servername'], $config['username'], $config['password'], $config['dbname']);
 
