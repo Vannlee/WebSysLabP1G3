@@ -66,7 +66,7 @@
                     <button type="submit" class="btn btn-primary" disabled>Submit</button>
                 </div>
             </form>
-            <script defer src="js/validation.js"></script>
+            <script defer src="js/registervalidation.js"></script>
         </main>
         <?php
         include "inc/footer.inc.php";
