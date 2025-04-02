@@ -1,9 +1,9 @@
 <?php
     session_start();
-    echo "Session data: "; //debugging
-    print_r($_SESSION); //debugging
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
+    // echo "Session data: "; //debugging
+    // print_r($_SESSION); //debugging
+    // error_reporting(E_ALL);
+    // ini_set('display_errors', 1);
 
     $config = parse_ini_file('/var/www/private/db-config.ini');
     $conn = new mysqli($config['servername'], $config['username'], $config['password'], $config['dbname']);

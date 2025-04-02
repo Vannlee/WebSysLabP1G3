@@ -80,6 +80,7 @@ $formattedDate = $joinDate->format('F j, Y');
         
         .nav-tabs .nav-link {
             border-radius: 10px 10px 0 0;
+            color: black;
         }
         
         .danger-zone {

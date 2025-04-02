@@ -65,7 +65,7 @@ function displayModal(image) {
         bookingButton.textContent = "Book Now";
         bookingButton.setAttribute("class", "btn btn-success");
         bookingButton.addEventListener("click", function() {
-            window.location.href = "booking.php";
+            window.location.href = "timetable.php";
         })
 
         // Append elements

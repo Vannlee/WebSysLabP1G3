@@ -3,6 +3,11 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 ?>
+<style>
+    .nav-link {color: white;}
+    .navbar-toggler-icon {background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");}
+</style>
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <a class="navbar-brand m-2" href="index.php">
@@ -26,10 +31,9 @@ if (session_status() === PHP_SESSION_NONE) {
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false">
-                        Classes
+                        Bookings
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="explore.php">Explore</a></li>
                         <li><a class="dropdown-item" href="timetable.php">Timetable</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="instructors.php">View Instructors</a></li>
@@ -48,7 +52,7 @@ if (session_status() === PHP_SESSION_NONE) {
                         <a class="nav-link" href="login.php">Login</a>
                     </li>
                     <li class="nav-item">
-                        <a class="btn btn-outline-success" href="register.php" role="button">Sign Up</a>
+                        <a class="btn btn-outline-primary" href="register.php" role="button">Sign Up</a>
                     </li>
                 <?php else: ?>
                     <!-- Logged-in user view -->
@@ -59,9 +63,9 @@ if (session_status() === PHP_SESSION_NONE) {
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                             <li><a class="dropdown-item" href="profile.php">Profile</a></li>
-                            <li><a class="dropdown-item" href="timetable.php">Book a slot</a></li>
-                            <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="booking.php">Manage Bookings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="feedback.php">Manage Feedback</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="logout.php">Logout</a></li>
                         </ul>

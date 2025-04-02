@@ -41,7 +41,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Fitness Gym</title>
+        <title>Gymbros</title>
         <?php
             include "inc/head.inc.php";
         ?>
