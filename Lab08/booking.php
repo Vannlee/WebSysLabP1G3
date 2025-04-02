@@ -17,14 +17,18 @@
     }
     $member_id = $_SESSION['user_id'];
 
-    // Query to fetch bookings for the logged-in user (joining members and location for display)
+    // Query to fetch bookings for the logged-in user
+    // Updated to remove class and instructor; added slot and computed status column.
     $sql_booking = "SELECT 
                         b.booking_id, 
                         CONCAT(gm.fname, ' ', gm.lname) AS member_name, 
                         l.loc_name, 
                         b.date, 
-                        b.class, 
-                        b.instructor 
+                        b.slot,
+                        CASE 
+                          WHEN b.date >= CURDATE() THEN 'upcoming'
+                          ELSE 'over'
+                        END AS status
                     FROM booking b 
                     JOIN gymbros_members gm ON b.member_id = gm.member_id
                     JOIN location l ON b.loc_id = l.loc_id
@@ -54,8 +58,8 @@
         <main>
             <div class="container my-4">
                 <div class="row">
-                    <!-- Left Column: Placeholder Table -->
-                    <div class="col-md-6">
+                     <!-- Left Column: Display User's Bookings -->
+                     <div class="col-md-6">
                         <h2>My Bookings</h2>
                         <table class="table table-striped">
                             <thead>
@@ -64,26 +68,26 @@
                                     <th>Member Name</th>
                                     <th>Location</th>
                                     <th>Date</th>
-                                    <th>Class</th>
-                                    <th>Instructor</th>
+                                    <th>Slot</th>
+                                    <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
-                                if ($booking_result->num_rows > 0) {
-                                    while ($row = $booking_result->fetch_assoc()) {
-                                        echo "<tr>";
-                                        echo "<td>" . htmlspecialchars($row['booking_id']) . "</td>";
-                                        echo "<td>" . htmlspecialchars($row['member_name']) . "</td>";
-                                        echo "<td>" . htmlspecialchars($row['loc_name']) . "</td>";
-                                        echo "<td>" . htmlspecialchars($row['date']) . "</td>";
-                                        echo "<td>" . htmlspecialchars($row['class']) . "</td>";
-                                        echo "<td>" . htmlspecialchars($row['instructor']) . "</td>";
-                                        echo "</tr>";
+                                    if ($booking_result->num_rows > 0) {
+                                        while ($row = $booking_result->fetch_assoc()) {
+                                            echo "<tr>";
+                                            echo "<td>" . htmlspecialchars($row['booking_id']) . "</td>";
+                                            echo "<td>" . htmlspecialchars($row['member_name']) . "</td>";
+                                            echo "<td>" . htmlspecialchars($row['loc_name']) . "</td>";
+                                            echo "<td>" . htmlspecialchars($row['date']) . "</td>";
+                                            echo "<td>" . htmlspecialchars($row['slot']) . "</td>";
+                                            echo "<td>" . htmlspecialchars($row['status']) . "</td>";
+                                            echo "</tr>";
+                                        }
+                                    } else {
+                                        echo "<tr><td colspan='6'>No bookings found.</td></tr>";
                                     }
-                                } else {
-                                    echo "<tr><td colspan='6'>No bookings found.</td></tr>";
-                                }
                                 ?>
                             </tbody>
                         </table>
@@ -95,30 +99,39 @@
                         <!-- The form submits to process_booking.php -->
                         <form id="bookingForm" action="process_booking.php" method="POST">
                             <div class="mb-3">
-                            <label for="bookingDate" class="form-label">Select Date</label>
-                            <input type="date" class="form-control" id="bookingDate" name="bookingDate" required>
+                                <label for="bookingDate" class="form-label">Select Date</label>
+                                <!-- Set the min attribute to today's date -->
+                                <input type="date" class="form-control" id="bookingDate" name="bookingDate" required min="<?php echo date('Y-m-d'); ?>">
                             </div>
-
+                            
+                            <!-- Slot Dropdown -->
                             <div class="mb-3">
-                            <label for="location" class="form-label">Select Location</label>
-                            <select class="form-select" id="location" name="location" required>
-                                <option value="">Choose a location</option>
-                                <?php
-                                if ($location_result && $location_result->num_rows > 0) {
-                                    while ($row = $location_result->fetch_assoc()) {
-                                        echo '<option value="' . $row['loc_id'] . '">' . htmlspecialchars($row['loc_name']) . '</option>';
-                                    }
-                                } else {
-                                    echo '<option value="">No locations found</option>';
-                                }
-                                ?>
-                            </select>
+                                <label for="slot" class="form-label">Select Slot</label>
+                                <select class="form-select" id="slot" name="slot" required>
+                                    <option value="">Choose a slot</option>
+                                    <option value="morning">Morning</option>
+                                    <option value="afternoon">Afternoon</option>
+                                </select>
                             </div>
-
-                            <!-- Hidden fields for static values (class & instructor) -->
-                            <input type="hidden" name="class" value="Yoga">
-                            <input type="hidden" name="instructor" value="Jane Doe">
-
+                            
+                            <!-- Location Dropdown -->
+                            <div class="mb-3">
+                                <label for="location" class="form-label">Select Location</label>
+                                <select class="form-select" id="location" name="location" required>
+                                    <option value="">Choose a location</option>
+                                    <?php
+                                        if ($location_result && $location_result->num_rows > 0) {
+                                            while ($row = $location_result->fetch_assoc()) {
+                                                echo '<option value="' . $row['loc_id'] . '">' . htmlspecialchars($row['loc_name']) . '</option>';
+                                            }
+                                        } else {
+                                            echo '<option value="">No locations found</option>';
+                                        }
+                                    ?>
+                                </select>
+                            </div>
+                            
+                            <!-- Removed hidden fields for class and instructor -->
                             <button type="submit" class="btn btn-primary">Book Now</button>
                         </form>
                     </div>
