@@ -65,14 +65,15 @@
             $result = $stmt->get_result();
 
             if ($result->num_rows > 0){
-                    while ($row = $result->fetch_assoc()) {
+                while ($row = $result->fetch_assoc()) {
                     echo '<article class="col-sm">';
                     echo '<figure>';
                     echo '<img class="img-thumbnail" src="' . $row["image_path"] . '" 
-                            alt="' . $row["loc_name"] . '" title="Click to make a booking"
-                            location="' . $row["loc_addr"] . '" booking_slots="' . $row["morning_slot"] . ', ' . $row["afternoon_slot"] . '"
-                            contact="' . $row["loc_contact"] . '"/>';
-                    echo '<figcaption>' . $row["loc_name"] . '</figcaption>';
+                            alt="' . htmlspecialchars($row["loc_name"]) . '" title="Click to make a booking"
+                            location="' . htmlspecialchars($row["loc_addr"]) . '" booking_slots="' . 
+                            htmlspecialchars($row["morning_slot"]) . ', ' . htmlspecialchars($row["afternoon_slot"]) . '"
+                            contact="' . htmlspecialchars($row["loc_contact"]) . '"/>';
+                    echo '<figcaption>' . htmlspecialchars($row["loc_name"]) . '</figcaption>';
                     echo '</figure>';
                     echo '</article>';
                 }
