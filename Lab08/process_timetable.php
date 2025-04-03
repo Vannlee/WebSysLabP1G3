@@ -24,38 +24,37 @@ if (!isset($_SESSION['user_id'])) {
     $member_id = $_SESSION['user_id'];
 }
 
-// Validate required fields
-if (empty($_POST["date"]) || empty($_POST["loc_id"]) || empty($_POST["session_time"]) || empty($_POST["slot_time"])) {
-    $errorMsg .= "All booking details are required.<br>";
+// Validate required fields: date, loc_id, and slot (expected to be "morning" or "afternoon")
+if (empty($_POST["date"]) || empty($_POST["loc_id"]) || empty($_POST["slot"])) {
+    $errorMsg .= "Date, location, and slot are required.<br>";
     $success = false;
 } else {
     // Sanitize inputs
     $bookingDate = sanitize_input($_POST["date"]);
-    $location = sanitize_input($_POST["loc_id"]);
-    $sessionTime = sanitize_input($_POST["session_time"]);
-    $slotTime = sanitize_input($_POST["slot_time"]);
-
-    // Set default values for the booking system
-    $class = ($sessionTime === "morning") ? "Morning Workout" : "Afternoon Training";
-    $instructor = ($sessionTime === "morning") ? "John Smith" : "Sarah Johnson";
+    $location    = sanitize_input($_POST["loc_id"]);
+    $slot        = sanitize_input($_POST["slot"]); // "morning" or "afternoon"
 }
 
-// Check if the date is in the past
-$bookingDateTime = new DateTime($bookingDate . ' ' . $slotTime);
-$currentDateTime = new DateTime();
-if ($bookingDateTime < $currentDateTime) {
-    $errorMsg .= "Cannot book sessions in the past.<br>";
+// Check if the booking date is in the past
+if ($bookingDate < date('Y-m-d')) {
+    $errorMsg .= "Cannot book sessions for a past date.<br>";
     $success = false;
 }
 
-// If everything is okay so far, check availability and process the booking
 if ($success) {
-    // Check if there are available slots
+    // Connect to database using PDO
     $config = parse_ini_file('/var/www/private/db-config.ini');
-    $pdo = new PDO("mysql:host={$config['servername']};dbname={$config['dbname']};charset=utf8", 
+    try {
+        $pdo = new PDO("mysql:host={$config['servername']};dbname={$config['dbname']};charset=utf8", 
                   $config['username'], $config['password']);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    } catch (PDOException $e) {
+        $errorMsg .= "Database connection failed: " . $e->getMessage() . "<br>";
+        $success = false;
+    }
+}
+
+if ($success) {
     // Get location details
     $locationQuery = "SELECT slots_availability FROM Gymbros.location WHERE loc_id = ?";
     $stmt = $pdo->prepare($locationQuery);
@@ -68,15 +67,14 @@ if ($success) {
     } else {
         $totalCapacity = $locationData['slots_availability'];
         
-        // Count existing bookings for this timeslot
+        // Count existing bookings for this timeslot (using unified slot value)
         $countQuery = "
             SELECT COUNT(*) as booking_count 
             FROM booking 
-            WHERE loc_id = ? AND date = ? AND 
-            " . ($sessionTime === "morning" ? "HOUR(morning_slot)" : "HOUR(afternoon_slot)") . " = HOUR(?)
+            WHERE loc_id = ? AND date = ? AND slot = ?
         ";
         $stmt = $pdo->prepare($countQuery);
-        $stmt->execute([$location, $bookingDate, $slotTime]);
+        $stmt->execute([$location, $bookingDate, $slot]);
         $countData = $stmt->fetch(PDO::FETCH_ASSOC);
         $currentBookings = $countData['booking_count'];
         
@@ -89,11 +87,10 @@ if ($success) {
             $checkExistingQuery = "
                 SELECT COUNT(*) as existing_count 
                 FROM booking 
-                WHERE member_id = ? AND loc_id = ? AND date = ? AND 
-                " . ($sessionTime === "morning" ? "HOUR(morning_slot)" : "HOUR(afternoon_slot)") . " = HOUR(?)
+                WHERE member_id = ? AND loc_id = ? AND date = ? AND slot = ?
             ";
             $stmt = $pdo->prepare($checkExistingQuery);
-            $stmt->execute([$member_id, $location, $bookingDate, $slotTime]);
+            $stmt->execute([$member_id, $location, $bookingDate, $slot]);
             $existingData = $stmt->fetch(PDO::FETCH_ASSOC);
             
             if ($existingData['existing_count'] > 0) {
@@ -101,7 +98,7 @@ if ($success) {
                 $success = false;
             } else {
                 // Process the booking
-                processBooking($member_id, $location, $bookingDate, $class, $instructor, $sessionTime, $slotTime);
+                processBooking($member_id, $location, $bookingDate, $slot);
             }
         }
     }
@@ -127,7 +124,6 @@ if ($success) {
 }
 echo "</main>";
 
-// Include the footer
 include "inc/footer.inc.php";
 
 // Sanitize user input.
@@ -135,28 +131,24 @@ function sanitize_input($data) {
     return htmlspecialchars(stripslashes(trim($data)));
 }
 
-// Process the booking by inserting a new record into the database.
-function processBooking($member_id, $location, $bookingDate, $class, $instructor, $sessionTime, $slotTime) {
+/**
+ * Process the booking by inserting a new record into the database.
+ * This function inserts into the unified booking schema using the $slot value.
+ */
+function processBooking($member_id, $location, $bookingDate, $slot) {
     global $errorMsg, $success;
 
     try {
-        // Read database credentials from a secure config file
         $config = parse_ini_file('/var/www/private/db-config.ini');
         $pdo = new PDO("mysql:host={$config['servername']};dbname={$config['dbname']};charset=utf8", 
                       $config['username'], $config['password']);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        // Define slot field based on session time
-        $slotField = ($sessionTime === "morning") ? "morning_slot" : "afternoon_slot";
-        
-        // Prepare the INSERT statement
-        $query = "INSERT INTO booking (member_id, loc_id, date, class, instructor, {$slotField}) 
-                 VALUES (?, ?, ?, ?, ?, ?)";
-        
+        // Prepare the INSERT statement into the unified booking table
+        $query = "INSERT INTO booking (member_id, loc_id, date, slot) VALUES (?, ?, ?, ?)";
         $stmt = $pdo->prepare($query);
-        $stmt->execute([$member_id, $location, $bookingDate, $class, $instructor, $slotTime]);
+        $stmt->execute([$member_id, $location, $bookingDate, $slot]);
         
-        // Check if the insert was successful
         if ($stmt->rowCount() === 0) {
             $errorMsg .= "Error inserting booking into database.<br>";
             $success = false;

@@ -3,6 +3,7 @@
  * Timetable page for Group 3's Gym website
  * Displays available gym sessions and allows users to book them
  */
+date_default_timezone_set('Asia/Singapore');
 session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -45,57 +46,59 @@ if ($result && $result->num_rows > 0) {
 $morning_slots = [];
 $afternoon_slots = [];
 
-// Process each location to extract slot information
+/**
+ * Helper function to count how many bookings exist for a given loc_id, date, and slot ("morning"/"afternoon").
+ * This version uses bind_result() to avoid issues if MySQLnd is not installed.
+ */
+function getBookingCount($conn, $loc_id, $selected_date, $slotValue) {
+    $booked_count = 0;
+    $sql = "
+        SELECT COUNT(*) AS booked_count
+        FROM booking
+        WHERE loc_id = ?
+          AND date = ?
+          AND slot = ?
+    ";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("iss", $loc_id, $selected_date, $slotValue);
+    $stmt->execute();
+    
+    // bind_result approach:
+    $stmt->bind_result($booked_count);
+    $stmt->fetch();
+    
+    $stmt->close();
+    return $booked_count;
+}
+
+// Process each location to build morning_slots / afternoon_slots
 foreach ($locations as $location) {
-    // Process morning slots if available
+    // If there's a morning time range, we store it for display, but we'll use slot='morning' in the booking table
     if (!empty($location['morning_slot'])) {
-        // Calculate slots left based on bookings
-        $slots_query = "
-            SELECT COUNT(*) as booked_count 
-            FROM booking 
-            WHERE loc_id = ? AND date = ? AND slot = ? 
-        ";
-        $stmt = $conn->prepare($slots_query);
-        $stmt->bind_param("iss", $location['loc_id'], $selected_date, $location['morning_slot']);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $booking_data = $result->fetch_assoc();
-        $booked_count = isset($booking_data['booked_count']) ? $booking_data['booked_count'] : 0;
+        // Count existing bookings for slot = 'morning'
+        $booked_count = getBookingCount($conn, $location['loc_id'], $selected_date, 'morning');
         $slots_left = $location['slots_availability'] - $booked_count;
         
-        // Add to morning slots array
         $morning_slots[] = [
-            'loc_id' => $location['loc_id'],
-            'loc_name' => $location['loc_name'],
-            'slot_time' => $location['morning_slot'],
-            'slots_availability' => $location['slots_availability'],
-            'slots_left' => $slots_left
+            'loc_id'            => $location['loc_id'],
+            'loc_name'          => $location['loc_name'],
+            'time_range'        => $location['morning_slot'],  // e.g. "07:00 - 10:00"
+            'slots_availability'=> $location['slots_availability'],
+            'slots_left'        => $slots_left
         ];
     }
-    
-    // Process afternoon slots if available
+
+    // If there's an afternoon time range, we store it for display, but we'll use slot='afternoon' in the booking table
     if (!empty($location['afternoon_slot'])) {
-        // Calculate slots left based on bookings
-        $slots_query = "
-            SELECT COUNT(*) as booked_count 
-            FROM booking 
-            WHERE loc_id = ? AND date = ? AND slot = ? 
-        ";
-        $stmt = $conn->prepare($slots_query);
-        $stmt->bind_param("iss", $location['loc_id'], $selected_date, $location['afternoon_slot']);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $booking_data = $result->fetch_assoc();
-        $booked_count = isset($booking_data['booked_count']) ? $booking_data['booked_count'] : 0;
+        $booked_count = getBookingCount($conn, $location['loc_id'], $selected_date, 'afternoon');
         $slots_left = $location['slots_availability'] - $booked_count;
         
-        // Add to afternoon slots array
         $afternoon_slots[] = [
-            'loc_id' => $location['loc_id'],
-            'loc_name' => $location['loc_name'],
-            'slot_time' => $location['afternoon_slot'],
-            'slots_availability' => $location['slots_availability'],
-            'slots_left' => $slots_left
+            'loc_id'            => $location['loc_id'],
+            'loc_name'          => $location['loc_name'],
+            'time_range'        => $location['afternoon_slot'],
+            'slots_availability'=> $location['slots_availability'],
+            'slots_left'        => $slots_left
         ];
     }
 }
@@ -137,142 +140,173 @@ usort($afternoon_slots, function($a, $b) {
     <body>
         <?php include "inc/nav.inc.php"; ?>
         <main class="container">
-            <h1>Gym Timetable</h1>
-            <!-- Date selector form -->
-            <form id="date-form" method="GET" action="">
-                <label for="booking-date">Select Date:</label>
-                <input type="date" id="booking-date" name="date" value="<?php echo htmlspecialchars($selected_date); ?>" min="<?php echo date('Y-m-d'); ?>" onchange="updateTimetable()">
-            </form>
-            
-            <!-- Morning Slots -->
-            <?php if (count($morning_slots) > 0): ?>
-                <h2>Morning Sessions</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Time</th>
-                            <th>Location</th>
-                            <th>Capacity</th>
-                            <th>Available Slots</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($morning_slots as $slot): 
-                            // Extract the start time from the time range
-                            $time_parts = explode(' - ', $slot['slot_time']);
-                            $start_time = trim($time_parts[0]);  // Get the starting time only
-                            $start_dt = new DateTime($selected_date . ' ' . $start_time);
-                            
-                            // For future dates, booking is available regardless of time passed today
-                            $is_passed = ($selected_date === $current_date) && ($start_dt < $current_datetime);
-                            
-                            // Check if slot is full
-                            $is_full = ($slot['slots_left'] <= 0);
-                        ?>
-                            <tr>
-                                <td><?php echo htmlspecialchars($slot['slot_time']); ?></td>
-                                <td><?php echo htmlspecialchars($slot['loc_name']); ?></td>
-                                <td><?php echo htmlspecialchars($slot['slots_availability']); ?></td>
-                                <td>
-                                    <?php if ($selected_date < $current_date): ?>
-                                        <span class="passed">Past Date</span>
-                                    <?php elseif ($is_passed): ?>
-                                        <span class="passed">Time Passed</span>
-                                    <?php elseif ($is_full): ?>
-                                        <span class="full">Full</span>
-                                    <?php else: ?>
-                                        <?php echo $slot['slots_left']; ?>
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <?php
-                                    // Show booking button for future dates or if today's slots have not passed
-                                    if (!$is_full && $selected_date >= $current_date && !$is_passed): 
-                                    ?>
-                                        <form action="process_booking.php" method="POST">
-                                            <input type="hidden" name="date" value="<?php echo htmlspecialchars($selected_date); ?>">
-                                            <input type="hidden" name="loc_id" value="<?php echo htmlspecialchars($slot['loc_id']); ?>">
-                                            <input type="hidden" name="session_time" value="morning">
-                                            <input type="hidden" name="slot_time" value="<?php echo htmlspecialchars($slot['slot_time']); ?>">
-                                            <button type="submit" class="book-btn">Book Now</button>
-                                        </form>
-                                    <?php else: ?>
-                                        -
-                                    <?php endif; ?>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            <?php else: ?>
-                <p>No morning sessions available for <?php echo htmlspecialchars($selected_date); ?>.</p>
-            <?php endif; ?>
-            
-            <!-- Afternoon Slots -->
-            <?php if (count($afternoon_slots) > 0): ?>
-                <h2>Afternoon Sessions</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Time</th>
-                            <th>Location</th>
-                            <th>Capacity</th>
-                            <th>Available Slots</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <?php foreach ($afternoon_slots as $slot): 
-                        // Extract the start time from the time range
-                        $time_parts = explode(' - ', $slot['slot_time']);
-                        $start_time = trim($time_parts[0]);  // Get the starting time only
-                        $start_dt = new DateTime($selected_date . ' ' . $start_time);
-                        
-                        // For future dates, booking is available regardless of time passed today
-                        $is_passed = ($selected_date === $current_date) && ($start_dt < $current_datetime);
-                        
-                        // Check if slot is full
-                        $is_full = ($slot['slots_left'] <= 0);
+        <h1>Gym Timetable</h1>
+        
+        <!-- Date selector form -->
+        <form id="date-form" method="GET" action="">
+            <label for="booking-date">Select Date:</label>
+            <input
+                type="date"
+                id="booking-date"
+                name="date"
+                value="<?php echo htmlspecialchars($selected_date); ?>"
+                min="<?php echo date('Y-m-d'); ?>"
+                onchange="updateTimetable()"
+            >
+        </form>
+        
+        <!-- Morning Slots -->
+        <?php if (count($morning_slots) > 0): ?>
+            <h2>Morning Sessions</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Location</th>
+                        <th>Capacity</th>
+                        <th>Available Slots</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php
+                foreach ($morning_slots as $slot) {
+                    $time_range = $slot['time_range']; // e.g. "07:00 - 10:00"
+                    $time_parts = explode('-', $time_range); // If your DB has "07:00 - 10:00" with spaces
+                    $start_time_str = trim($time_parts[0]);  // "07:00"
+                    $end_time_str   = trim($time_parts[1]);  // "10:00"
+
+                    $start_dt = new DateTime($selected_date . ' ' . $start_time_str);
+                    $end_dt   = new DateTime($selected_date . ' ' . $end_time_str);
+
+                    $is_passed = false;
+                    if ($selected_date < $current_date) {
+                        // The date is in the past
+                        $is_passed = true;
+                    } elseif ($selected_date === $current_date) {
+                        // If the *end* time is before now, the session has passed
+                        if ($end_dt < $current_datetime) {
+                            $is_passed = true;
+                        }
+                    }
+
+                    $is_full = ($slot['slots_left'] <= 0);
+
+                    if ($is_passed) {
+                        $statusText = "<span class='passed'>Time Passed</span>";
+                        $canBook = false;
+                    } elseif ($is_full) {
+                        $statusText = "<span class='full'>Full</span>";
+                        $canBook = false;
+                    } else {
+                        $statusText = $slot['slots_left'];
+                        $canBook = true;
+                    }
+                
                     ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($slot['slot_time']); ?></td>
-                            <td><?php echo htmlspecialchars($slot['loc_name']); ?></td>
-                            <td><?php echo htmlspecialchars($slot['slots_availability']); ?></td>
-                            <td>
-                                <?php if ($selected_date < $current_date): ?>
-                                    <span class="passed">Past Date</span>
-                                <?php elseif ($is_passed): ?>
-                                    <span class="passed">Time Passed</span>
-                                <?php elseif ($is_full): ?>
-                                    <span class="full">Full</span>
-                                <?php else: ?>
-                                    <?php echo $slot['slots_left']; ?>
-                                <?php endif; ?>
-                            </td>
-                            <td>
-                                <?php
-                                // Show booking button for future dates or if today's slots have not passed
-                                if (!$is_full && $selected_date >= $current_date && !$is_passed): 
-                                ?>
-                                    <form action="process_booking.php" method="POST">
-                                        <input type="hidden" name="date" value="<?php echo htmlspecialchars($selected_date); ?>">
-                                        <input type="hidden" name="loc_id" value="<?php echo htmlspecialchars($slot['loc_id']); ?>">
-                                        <input type="hidden" name="session_time" value="afternoon">
-                                        <input type="hidden" name="slot_time" value="<?php echo htmlspecialchars($slot['slot_time']); ?>">
-                                        <button type="submit" class="book-btn">Book Now</button>
-                                    </form>
-                                <?php else: ?>
-                                    -
-                                <?php endif; ?>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                    </tbody>
-                </table>
-            <?php else: ?>
-                <p>No afternoon sessions available for <?php echo htmlspecialchars($selected_date); ?>.</p>
-            <?php endif; ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($time_range); ?></td>
+                        <td><?php echo htmlspecialchars($slot['loc_name']); ?></td>
+                        <td><?php echo htmlspecialchars($slot['slots_availability']); ?></td>
+                        <td><?php echo $statusText; ?></td>
+                        <td>
+                            <?php if ($canBook): ?>
+                                <form action="process_timetable.php" method="POST">
+                                    <input type="hidden" name="date" value="<?php echo htmlspecialchars($selected_date); ?>">
+                                    <input type="hidden" name="loc_id" value="<?php echo htmlspecialchars($slot['loc_id']); ?>">
+                                    <!-- We unify the slot to "morning" -->
+                                    <input type="hidden" name="slot" value="morning">
+                                    <button type="submit" class="book-btn">Book Now</button>
+                                </form>
+                            <?php else: ?>
+                                -
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <?php
+                }
+                ?>
+                </tbody>
+            </table>
+        <?php else: ?>
+            <p>No morning sessions available for <?php echo htmlspecialchars($selected_date); ?>.</p>
+        <?php endif; ?>
+        
+        <!-- Afternoon Slots -->
+        <?php if (count($afternoon_slots) > 0): ?>
+            <h2>Afternoon Sessions</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Location</th>
+                        <th>Capacity</th>
+                        <th>Available Slots</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php
+                foreach ($afternoon_slots as $slot) {
+                    $time_range = $slot['time_range']; // e.g. "07:00 - 10:00"
+                    $time_parts = explode('-', $time_range); // If your DB has "07:00 - 10:00" with spaces
+                    $start_time_str = trim($time_parts[0]);  // "07:00"
+                    $end_time_str   = trim($time_parts[1]);  // "10:00"
+
+                    $start_dt = new DateTime($selected_date . ' ' . $start_time_str);
+                    $end_dt   = new DateTime($selected_date . ' ' . $end_time_str);
+
+                    $is_passed = false;
+                    if ($selected_date < $current_date) {
+                        // The date is in the past
+                        $is_passed = true;
+                    } elseif ($selected_date === $current_date) {
+                        // If the *end* time is before now, the session has passed
+                        if ($end_dt < $current_datetime) {
+                            $is_passed = true;
+                        }
+                    }
+
+                    $is_full = ($slot['slots_left'] <= 0);
+
+                    if ($is_passed) {
+                        $statusText = "<span class='passed'>Time Passed</span>";
+                        $canBook = false;
+                    } elseif ($is_full) {
+                        $statusText = "<span class='full'>Full</span>";
+                        $canBook = false;
+                    } else {
+                        $statusText = $slot['slots_left'];
+                        $canBook = true;
+                    }
+                    ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($time_range); ?></td>
+                        <td><?php echo htmlspecialchars($slot['loc_name']); ?></td>
+                        <td><?php echo htmlspecialchars($slot['slots_availability']); ?></td>
+                        <td><?php echo $statusText; ?></td>
+                        <td>
+                            <?php if ($canBook): ?>
+                                <form action="process_timetable.php" method="POST">
+                                    <input type="hidden" name="date" value="<?php echo htmlspecialchars($selected_date); ?>">
+                                    <input type="hidden" name="loc_id" value="<?php echo htmlspecialchars($slot['loc_id']); ?>">
+                                    <!-- We unify the slot to "afternoon" -->
+                                    <input type="hidden" name="slot" value="afternoon">
+                                    <button type="submit" class="book-btn">Book Now</button>
+                                </form>
+                            <?php else: ?>
+                                -
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <?php
+                }
+                ?>
+                </tbody>
+            </table>
+        <?php else: ?>
+            <p>No afternoon sessions available for <?php echo htmlspecialchars($selected_date); ?>.</p>
+        <?php endif; ?>
         </main>
         <?php include "inc/footer.inc.php"; ?>
     </body>
