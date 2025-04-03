@@ -62,25 +62,29 @@
             $result = $stmt->get_result();
 
             if ($result->num_rows > 0){
-                echo '<table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Feedback ID</th>
-                                <th style="width:50%">Content</th>
-                                <th>Date Created</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>';
+                echo '<div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th style="width:10%">Feedback ID</th>
+                                    <th style="width:50%">Content</th>
+                                    <th>Date Created</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>';
                 while ($row = $result->fetch_assoc()) {
                     echo '<tr>
                               <td>'.  htmlspecialchars($row['feedback_id']) . '</td>
                               <td>'.  htmlspecialchars($row['content']) . '</td>
                               <td>'.  htmlspecialchars($row['datetime']) . '</td>
+                              <td><a href="edit_feedback.php?id=' . htmlspecialchars($row['feedback_id']) . ' class="btn btn-sm btn-warning action-btn">Edit</a></td>
+                              <td><a href="delete_feedback.php?id=' . htmlspecialchars($row['feedback_id']) . ' class="btn btn-sm btn-danger action-btn onclick=\'return confirm(\"Are you sure you want to delete this booking?\");\'>Delete</a></td>
                           </tr>';
                 }
                 echo '</tbody>
-                      </table>';
+                      </table>
+                      </div>';
             }
             else {
                 echo '<h5>No Membership Feedback records found</h5>';

@@ -126,10 +126,6 @@
                     <h1 class="display-4">' . $greeting . ', <span class="text-warning">' . htmlspecialchars($fname) . '</span>!</h1>
                     <p class="lead">Ready to crush your fitness goals today?</p>
                     <hr class="my-4 bg-light">
-                    <p>What would you like to do?</p>
-                    <div class="mt-4">
-                        <a href="bookings.php" class="btn btn-primary btn-lg">Book a Session</a>
-                        <a href="profile.php" class="btn btn-outline-light btn-lg">View Profile</a>
                     </div>
                 </div>
             </div>';
