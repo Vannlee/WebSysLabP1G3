@@ -103,15 +103,25 @@
         
         // Process payment if no errors
         if (empty($errors)) {
-            // Store payment information in database (CVV is NOT stored)
+            
+            // Get the original card number
+            $full_card_number = preg_replace('/\s+/', '', $_POST['card_number']);
+        
+            // Extract the last 4 digits
+            $last_four = substr($full_card_number, -4);
+        
+            // Create the masked version
+            $masked_card_number = "xxxx-xxxx-xxxx-" . $last_four;
+        
+            // Store payment information in database
             $stmt = $conn->prepare("INSERT INTO Gymbros.payment_methods 
-                (member_id, card_name, card_number, expiry_date, billing_address) 
-                VALUES (?, ?, ?, ?, ?)");
+            (member_id, card_name, card_number, expiry_date, billing_address) 
+            VALUES (?, ?, ?, ?, ?)");
             
             $stmt->bind_param("issss", 
                 $_SESSION['user_id'], 
                 $_POST['card_name'],
-                $_POST['card_number'],
+                $masked_card_number,
                 $_POST['expiry_date'],
                 $_POST['billing_address']
             );
