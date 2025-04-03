@@ -125,8 +125,8 @@ usort($afternoon_slots, function($a, $b) {
             table { width: 100%; border-collapse: collapse; margin-top: 20px; }
             th, td { border: 1px solid #ccc; padding: 10px; text-align: center; }
             th { background-color: #f5f5f5; }
-            .book-btn { background-color: #4CAF50; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 3px; }
-            .book-btn:hover { background-color: #45a049; }
+            .book-btn { background-color: #2E7D32; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 3px; }
+            .book-btn:hover { background-color: #27632a; }
             .full { color: #ff0000; font-weight: bold; }
             .passed { color: #999; font-style: italic; }
         </style>

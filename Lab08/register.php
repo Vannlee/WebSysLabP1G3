@@ -4,14 +4,14 @@
         <title>Register - Gymbros</title>
         <?php
             include "inc/head.inc.php";
+            include "inc/enablejs.inc.php";
         ?>
         <link rel="stylesheet" href="css/register.css">
     </head>
 
     <body>
         <?php
-            include "inc/nav.inc.php";
-            include "inc/enablejs.inc.php";
+            include "inc/nav.inc.php";           
         ?>
         <main id="main-content" class="container">
             <h1>Member Registration</h1>
