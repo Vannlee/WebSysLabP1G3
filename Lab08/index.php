@@ -126,7 +126,7 @@
                     @keyframes fadeIn {
                         0% { opacity: 0; transform: translateY(20px); }
                         100% { opacity: 1; transform: translateY(0); }
-                    }
+                    } 
                 </style>';
 
                 echo '<div class="welcome-message text-center my-4 fade-in">
