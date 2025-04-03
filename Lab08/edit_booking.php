@@ -3,8 +3,6 @@ session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-include "inc/head.inc.php";
-include "inc/nav.inc.php";
 
 // Ensure the user is logged in
 if (!isset($_SESSION['user_id'])) {
@@ -51,6 +49,7 @@ $locations_result = $conn->query($sql_location);
     <?php include "inc/head.inc.php"; ?>
 </head>
 <body>
+    <?php include "inc/nav.inc.php"; ?>
     <main class="container my-4">
         <h2>Edit Booking</h2>
         <form action="process_edit_booking.php" method="POST">
