@@ -39,13 +39,18 @@ if ($success) {
 if ($success) {
     echo "<title>Feedback Success</title>";
     echo "<main class='container'>";
+    echo "<div class='alert alert-secondary mt-4'>";
     echo "<h3>Thank You for Your Feedback</h3>";
+    echo "<p>We hope you have a nice day!</p>";
+    echo "</div>";
     echo "<p><a class='btn btn-success' href='index.php'>Back to Homepage</a></p></main>";
 } else {
     echo "<title>Feedback Error</title>";
     echo "<main class='container'>";
+    echo "<div class='alert alert-secondary mt-4'>";
     echo "<h3>Oops! Kindly resolve the following:</h3>";
-    echo "<h4>Error: </h4><p>" . $errorMsg . "</p>";
+    echo "<p>Error: </h4><p>" . $errorMsg . "</p>";
+    echo "</div>";
     echo "<p><a class='btn btn-warning' href='leave_feedback.php'>Try Again</a></p></main>";
 }
 
