@@ -83,6 +83,7 @@ function getMembershipName($price) {
         include "inc/enablejs.inc.php";
     ?>
     <link rel="stylesheet" href="css/profile.css">
+    <script src="js/profile-validation.js"></script>
 
 </head>
 <body>
@@ -102,6 +103,14 @@ function getMembershipName($price) {
                 <span class="badge bg-light text-dark">Member since <?php echo $formattedDate; ?></span>
             </div>
         </div>
+
+        <?php if (isset($_SESSION['profile_error'])): ?>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <?php echo $_SESSION['profile_error']; ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <?php unset($_SESSION['profile_error']); ?>
+        <?php endif; ?>
         
         <?php if (isset($_SESSION['profile_updated']) && $_SESSION['profile_updated']): ?>
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -137,7 +146,7 @@ function getMembershipName($price) {
         <div class="tab-content" id="profileTabsContent">
             <!-- Profile Information Tab -->
             <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                <form action="process_profile.php" method="post">
+                <form id="profile-form" action="process_profile.php" method="post">
                     <input type="hidden" name="member_id" value="<?php echo htmlspecialchars($user['member_id']); ?>">
                     <input type="hidden" name="action_type" value="update_profile">
                     
@@ -174,7 +183,7 @@ function getMembershipName($price) {
             
             <!-- Security Tab -->
             <div class="tab-pane fade" id="security" role="tabpanel" aria-labelledby="security-tab">
-                <form action="process_profile.php" method="post">
+                <form id="security-form" action="process_profile.php" method="post">
                     <input type="hidden" name="member_id" value="<?php echo htmlspecialchars($user['member_id']); ?>">
                     <input type="hidden" name="action_type" value="update_password">
                     
@@ -204,7 +213,7 @@ function getMembershipName($price) {
                     <h4 class="text-danger"><i class="bi bi-exclamation-triangle-fill"></i> Danger Zone</h4>
                     <p>Once you delete your account, there is no going back. Please be certain.</p>
                     
-                    <form action="process_profile.php" method="post" onsubmit="return confirm('Are you sure you want to delete your profile? This action cannot be undone.');">
+                    <form id="delete-form" action="process_profile.php" method="post" onsubmit="return confirm('Are you sure you want to delete your profile? This action cannot be undone.');">
                         <input type="hidden" name="member_id" value="<?php echo htmlspecialchars($user['member_id']); ?>">
                         <input type="hidden" name="action_type" value="delete">
                         

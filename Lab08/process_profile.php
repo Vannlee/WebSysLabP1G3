@@ -7,6 +7,19 @@ function sanitize_input($data) {
     return htmlspecialchars(stripslashes(trim($data ?? "")));
 }
 
+// Enhanced validation functions
+function validate_name($name) {
+    return preg_match('/^[a-zA-Z ]+$/', $name);
+}
+
+function validate_email($email) {
+    return filter_var($email, FILTER_VALIDATE_EMAIL);
+}
+
+function validate_contact($contact) {
+    return preg_match('/^\d{8}$/', $contact);
+}
+
 if (!isset($_SESSION["email"])) {
     die("Access denied. Please <a href='login.php'>log in</a>.");
 }
@@ -55,6 +68,41 @@ if ($action_type === "delete") {
     $current_pwd = $_POST["current_pwd"] ?? "";
     $email       = sanitize_input($_POST["email"]  ?? "");
 
+    // Validation - First Name
+    if (empty($fname) || !validate_name($fname)) {
+        $errorMsg .= "First name should only contain letters and spaces.<br>";
+        $success = false;
+    }
+
+    // Validation - Last Name
+    if (empty($lname) || !validate_name($lname)) {
+        $errorMsg .= "Last name should only contain letters and spaces.<br>";
+        $success = false;
+    }
+
+    // Validation - Email
+    if (empty($email) || !validate_email($email)) {
+        $errorMsg .= "Please provide a valid email address.<br>";
+        $success = false;
+    } else {
+        // Check if email is already in use by another member
+        $stmt = $conn->prepare("SELECT member_id FROM gymbros_members WHERE email=? AND member_id!=?");
+        $stmt->bind_param("si", $email, $member_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows > 0) {
+            $errorMsg .= "Email address is already in use by another account.<br>";
+            $success = false;
+        }
+        $stmt->close();
+    }
+
+    // Validation - Contact
+    if (empty($contact) || !validate_contact($contact)) {
+        $errorMsg .= "Contact number must be exactly 8 digits.<br>";
+        $success = false;
+    }
+
     // Fallback if email is empty
     if (empty($email)) {
         $email = $_SESSION["email"];
@@ -83,6 +131,7 @@ if ($action_type === "delete") {
         } else {
             // Update session email
             $_SESSION["email"] = $email;
+            $_SESSION['profile_updated'] = true;
         }
         $stmt->close();
     }
@@ -104,6 +153,12 @@ if ($action_type === "delete") {
         $success = false;
     } elseif ($new_pwd !== $confirm_pwd) {
         $errorMsg .= "New passwords do not match.<br>";
+        $success = false;
+    } elseif (strlen($new_pwd) < 8) {
+        $errorMsg .= "Password must be at least 8 characters long.<br>";
+        $success = false;
+    } elseif (!preg_match('/[a-zA-Z]/', $new_pwd) || !preg_match('/\d/', $new_pwd) || !preg_match('/[^a-zA-Z\d]/', $new_pwd)) {
+        $errorMsg .= "Password must include a combination of letters, numbers, and special characters.<br>";
         $success = false;
     }
 
@@ -128,6 +183,8 @@ if ($action_type === "delete") {
         if (!$stmt->execute()) {
             $errorMsg .= "Error updating password: " . $stmt->error;
             $success = false;
+        } else {
+            $_SESSION['profile_updated'] = true;
         }
         $stmt->close();
     }
@@ -135,51 +192,19 @@ if ($action_type === "delete") {
 
 $conn->close();
 
-// ================== OUTPUT WITH NAV & FOOTER ==================
+// Redirect instead of showing HTML
 if ($success) {
-    // Successful action
-    ?>
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <title>Action Completed - GymBros</title>
-        <?php
-        include "inc/head.inc.php";
-        include "inc/enablejs.inc.php";
-        ?>
-    </head>
-    <body>
-    <?php include "inc/nav.inc.php"; ?>
-    <main class="container py-5">
-        <h3 class="text-success">Action completed successfully.</h3>
-        <p><a href="profile.php" class="btn btn-success">Return to Profile</a></p>
-    </main>
-    <?php include "inc/footer.inc.php"; ?>
-    </body>
-    </html>
-    <?php
+    if ($action_type === "delete") {
+        header("Location: login.php?logout=1&deleted=1");
+        exit();
+    } else {
+        header("Location: profile.php");
+        exit();
+    }
 } else {
-    // Action failed
-    ?>
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <title>Action Failed - GymBros</title>
-        <?php
-        include "inc/head.inc.php";
-        include "inc/enablejs.inc.php";
-        ?>
-    </head>
-    <body>
-    <?php include "inc/nav.inc.php"; ?>
-    <main class="container py-5">
-        <h3 class="text-danger">Action failed.</h3>
-        <p><?php echo $errorMsg; ?></p>
-        <p><a href="profile.php" class="btn btn-warning">Try Again</a></p>
-    </main>
-    <?php include "inc/footer.inc.php"; ?>
-    </body>
-    </html>
-    <?php
+    // Store error in session and redirect back to profile
+    $_SESSION['profile_error'] = $errorMsg;
+    header("Location: profile.php");
+    exit();
 }
 ?>
