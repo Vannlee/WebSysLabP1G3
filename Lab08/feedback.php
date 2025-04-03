@@ -17,7 +17,7 @@
             $f_id = $_GET['id'];
 
             if ($action == "update") {
-                header("Location: update_feedback.php?id=" . $f_id);
+                header("Location: edit_feedback.php?id=" . $f_id);
             }
             elseif ($action == "delete") {
                 echo "<script>
