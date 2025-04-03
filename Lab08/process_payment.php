@@ -188,15 +188,18 @@ if ($success) {
 
     // Store payment information in database
     $stmt = $conn->prepare("INSERT INTO Gymbros.payment_methods 
-        (member_id, card_name, card_number, expiry_date, billing_address) 
-        VALUES (?, ?, ?, ?, ?)");
+        (member_id, card_name, card_number, expiry_date, billing_address, price) 
+        VALUES (?, ?, ?, ?, ?, ?)");
     
-    $stmt->bind_param("issss", 
+    $price = $memberships[$selectedMembership]['price']; // Get price based on selected membership
+
+    $stmt->bind_param("issssd", 
         $_SESSION['user_id'], 
         $_POST['card_name'],
         $masked_card_number,
         $_POST['expiry_date'],
-        $_POST['billing_address']
+        $_POST['billing_address'],
+        $price
     );
     
     // Execute the payment method storage
