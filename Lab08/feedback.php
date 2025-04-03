@@ -66,8 +66,9 @@
                         <thead>
                             <tr>
                                 <th>Feedback ID</th>
-                                <th>Content</th>
+                                <th style="width:50%">Content</th>
                                 <th>Date Created</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>';
