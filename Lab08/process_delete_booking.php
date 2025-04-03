@@ -1,4 +1,5 @@
 <?php
+date_default_timezone_set('Asia/Singapore');
 session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -9,6 +10,12 @@ include "inc/nav.inc.php";
 $errorMsg = "";
 $success = true;
 
+// Ensure the request is POST
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header("Location: booking.php");
+    exit();
+}
+
 // Check if the user is logged in
 if (!isset($_SESSION['user_id'])) {
     $errorMsg .= "User not logged in.<br>";
@@ -17,15 +24,16 @@ if (!isset($_SESSION['user_id'])) {
     $member_id = $_SESSION['user_id'];
 }
 
-// Validate booking ID from GET parameter
-if (!isset($_GET['id'])) {
+// Validate booking ID from POST
+if (empty($_POST['booking_id'])) {
     $errorMsg .= "Booking ID is missing.<br>";
     $success = false;
 } else {
-    $booking_id = intval($_GET['id']);
+    $booking_id = intval($_POST['booking_id']);
 }
 
 if ($success) {
+    // Connect to database using PDO
     $config = parse_ini_file('/var/www/private/db-config.ini');
     try {
         $pdo = new PDO("mysql:host={$config['servername']};dbname={$config['dbname']};charset=utf8",
@@ -38,12 +46,26 @@ if ($success) {
 }
 
 if ($success) {
-    // Delete booking ensuring it belongs to the logged-in user
-    $query = "DELETE FROM booking WHERE booking_id = ? AND member_id = ?";
+    // Verify that the booking belongs to the current user
+    $query = "SELECT booking_id FROM booking WHERE booking_id = ? AND member_id = ?";
     $stmt = $pdo->prepare($query);
     $stmt->execute([$booking_id, $member_id]);
+    $booking = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if (!$booking) {
+        $errorMsg .= "Booking not found or you are not authorized to delete this booking.<br>";
+        $success = false;
+    }
+}
+
+if ($success) {
+    // Proceed to delete the booking
+    $deleteQuery = "DELETE FROM booking WHERE booking_id = ? AND member_id = ?";
+    $stmt = $pdo->prepare($deleteQuery);
+    $stmt->execute([$booking_id, $member_id]);
+    
     if ($stmt->rowCount() === 0) {
-        $errorMsg .= "No booking deleted. Either the booking was not found or you are not authorized.<br>";
+        $errorMsg .= "No booking deleted. Either it was not found or you are not authorized.<br>";
         $success = false;
     }
 }
