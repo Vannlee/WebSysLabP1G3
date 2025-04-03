@@ -37,10 +37,10 @@
     }
     
     if (!empty($_POST["feedback_id"]) && !empty($_POST["user_id"]) && !empty($_POST["feedback_content"]) && isLoggedIn()) {
-        $membershipStmt = $conn->prepare("UPDATE Gymbros.membership_feedback SET content = ? WHERE feedback_id = ? && member_id = ?");
-        $membershipStmt->bind_param("sii", $content, $f_id, $id);
+        $stmt = $conn->prepare("UPDATE Gymbros.membership_feedback SET content = ? WHERE feedback_id = ? && member_id = ?");
+        $stmt->bind_param("sii", $content, $f_id, $id);
                 
-        if ($membershipStmt->execute()) {
+        if ($stmt->execute()) {
             include "inc/head.inc.php";
                 include "inc/nav.inc.php";
 
@@ -50,15 +50,15 @@
                         <h1>Feedback Update was Successful</h1>
                         <p>Thank you for your honest feedback!</p>
                         <a href="feedback.php" class="btn btn-sm btn-primary action-btn">Return to Feedback Records</a>
-                      </div>';
-            } else {
-                echo "<title>Update Failed</title>";
-                echo "<main class='container'>";
-                echo '<div class="alert alert-danger mt-4">
-                        <h1>Feedback Update was unsuccessful</h1>
-                        <p>Thank you for your honest feedback!</p>
-                        <a href="edit_feedback.php?id=' . $f_id . '" class="btn btn-sm btn-warning action-btn">Try Again</a>
-                      </div>';
-            }
+                      </div></main>';
+        } else {
+            echo "<title>Update Failed</title>";
+            echo "<main class='container'>";
+            echo '<div class="alert alert-danger mt-4">
+                    <h1>Feedback Update was unsuccessful</h1>
+                    <p>Thank you for your honest feedback!</p>
+                    <a href="edit_feedback.php?id=' . $f_id . '" class="btn btn-sm btn-warning action-btn">Try Again</a>
+                  </div></main>';
+        }
     }
 ?>
