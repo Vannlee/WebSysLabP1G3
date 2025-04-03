@@ -109,7 +109,35 @@
                     $lname = $row["lname"];
                 }
 
-                echo "<h1>Welcome back, " . htmlspecialchars($fname) . " " . htmlspecialchars($lname) . ".</h1>";
+                // Time-based greeting
+                $hour = date('H');
+                if ($hour < 12) {
+                $greeting = "Good morning";
+                } else if ($hour < 18) {
+                $greeting = "Good afternoon";
+                } else {
+                $greeting = "Good evening";
+                }
+
+                echo '<style>
+                    .fade-in {
+                        animation: fadeIn 1s ease-in;
+                    }
+                    @keyframes fadeIn {
+                        0% { opacity: 0; transform: translateY(20px); }
+                        100% { opacity: 1; transform: translateY(0); }
+                    }
+                </style>';
+
+                echo '<div class="welcome-message text-center my-4 fade-in">
+                    <h1 class="mb-3">' . $greeting . ', <span class="text-primary">' . htmlspecialchars($fname) . '</span>!</h1>
+                    <p class="text-muted">What would you like to do today?</p>
+                    <div class="btn-group mt-3">
+                        <a href="bookings.php" class="btn btn-outline-primary">Book a Session</a>
+                        <a href="profile.php" class="btn btn-outline-secondary">View Profile</a>
+                    </div>
+                </div>';
+
             }
         }
     ?>

@@ -321,8 +321,7 @@ function getMembershipName($price) {
                 <?php endif; ?>
                 
                 <div class="alert alert-secondary mt-4">
-                    <i class="bi bi-question-circle-fill"></i> Need help with a transaction? Please <a href="contact.php" class="alert-link">contact our support team</a>.
-                </div>
+                <i class="bi bi-question-circle-fill"></i> Need help with a transaction? Please <a href="mailto:scott.jones@singaporetech.edu.sg" class="alert-link">contact helpdesk</a>.                </div>
             </div>
         </div>
     </main>
