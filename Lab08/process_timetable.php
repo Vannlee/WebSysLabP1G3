@@ -60,7 +60,7 @@ if ($success) {
 }
 
 if ($success) {
-    // Get location details - updated field names to match your database
+    // Get location details
     $locationQuery = "SELECT slots_availability, loc_name FROM Gymbros.location WHERE loc_id = ?";
     $stmt = $pdo->prepare($locationQuery);
     $stmt->execute([$location]);
@@ -73,50 +73,65 @@ if ($success) {
         $totalCapacity = $locationData['slots_availability'];
         $currentGymName = $locationData['loc_name'];
         
-        // Count existing bookings for this timeslot
-        $countQuery = "
-            SELECT COUNT(*) as booking_count 
+        // Check if user has already booked this specific slot at this location
+        $checkDuplicateQuery = "
+            SELECT COUNT(*) as duplicate_count 
             FROM booking 
-            WHERE loc_id = ? AND date = ? AND slot = ?
+            WHERE member_id = ? AND loc_id = ? AND date = ? AND slot = ?
         ";
-        $stmt = $pdo->prepare($countQuery);
-        $stmt->execute([$location, $bookingDate, $slot]);
-        $countData = $stmt->fetch(PDO::FETCH_ASSOC);
-        $currentBookings = $countData['booking_count'];
+        $stmt = $pdo->prepare($checkDuplicateQuery);
+        $stmt->execute([$member_id, $location, $bookingDate, $slot]);
+        $duplicateData = $stmt->fetch(PDO::FETCH_ASSOC);
         
-        // Check if there's space available
-        if ($currentBookings >= $totalCapacity) {
-            $errorMsg .= "Sorry, this session is now full.<br>";
+        if ($duplicateData['duplicate_count'] > 0) {
+            $errorMsg .= "You have already booked this session at " . htmlspecialchars($currentGymName) . ".<br>";
             $success = false;
         } else {
-            // Check if user already has a booking for this slot at another location
-            $checkExistingQuery = "
-                SELECT b.loc_id, l.loc_name as gym_name
-                FROM booking b
-                JOIN Gymbros.location l ON b.loc_id = l.loc_id
-                WHERE b.member_id = ? AND b.date = ? AND b.slot = ? 
+            // Count existing bookings for this timeslot (for capacity check)
+            $countQuery = "
+                SELECT COUNT(*) as booking_count 
+                FROM booking 
+                WHERE loc_id = ? AND date = ? AND slot = ?
             ";
-            $stmt = $pdo->prepare($checkExistingQuery);
-            $stmt->execute([$member_id, $bookingDate, $slot]);
-            $existingBooking = $stmt->fetch(PDO::FETCH_ASSOC);
+            $stmt = $pdo->prepare($countQuery);
+            $stmt->execute([$location, $bookingDate, $slot]);
+            $countData = $stmt->fetch(PDO::FETCH_ASSOC);
+            $currentBookings = $countData['booking_count'];
             
-            if ($existingBooking && $existingBooking['loc_id'] != $location) {
-                // User already has a booking at another gym for the same slot
-                $warningMsg = "You already have a booking for " . htmlspecialchars($bookingDate) . 
-                              " (" . htmlspecialchars($slot) . " session) at " . 
-                              htmlspecialchars($existingBooking['gym_name']) . ".";
-                
-                if ($confirmOverride) {
-                    // User confirmed they want to proceed despite the warning
-                    processBooking($member_id, $location, $bookingDate, $slot);
-                } else {
-                    // Show warning and ask for confirmation
-                    $showWarningConfirmation = true;
-                    $success = false;
-                }
+            // Check if there's space available
+            if ($currentBookings >= $totalCapacity) {
+                $errorMsg .= "Sorry, this session is now full.<br>";
+                $success = false;
             } else {
-                // No booking conflict, proceed normally
-                processBooking($member_id, $location, $bookingDate, $slot);
+                // Check if user already has a booking for this slot at another location
+                $checkExistingQuery = "
+                    SELECT b.loc_id, l.loc_name as gym_name
+                    FROM booking b
+                    JOIN Gymbros.location l ON b.loc_id = l.loc_id
+                    WHERE b.member_id = ? AND b.date = ? AND b.slot = ? AND b.loc_id != ?
+                ";
+                $stmt = $pdo->prepare($checkExistingQuery);
+                $stmt->execute([$member_id, $bookingDate, $slot, $location]);
+                $existingBooking = $stmt->fetch(PDO::FETCH_ASSOC);
+                
+                if ($existingBooking) {
+                    // User already has a booking at another gym for the same slot
+                    $warningMsg = "You already have a booking for " . htmlspecialchars($bookingDate) . 
+                                " (" . htmlspecialchars($slot) . " session) at " . 
+                                htmlspecialchars($existingBooking['gym_name']) . ".";
+                    
+                    if ($confirmOverride) {
+                        // User confirmed they want to proceed despite the warning
+                        processBooking($member_id, $location, $bookingDate, $slot);
+                    } else {
+                        // Show warning and ask for confirmation
+                        $showWarningConfirmation = true;
+                        $success = false;
+                    }
+                } else {
+                    // No booking conflict, proceed normally
+                    processBooking($member_id, $location, $bookingDate, $slot);
+                }
             }
         }
     }
