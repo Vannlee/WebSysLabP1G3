@@ -66,7 +66,7 @@ function sanitize_input($data) {
  * Authenticate user and implement "Remember Me" functionality.
  */
 function authenticateUser() {
-    global $fname, $lname, $email, $pwd, $errorMsg, $success, $remember;
+    global $fname, $lname, $email, $pwd, $membership, $errorMsg, $success, $remember;
 
     $config = parse_ini_file('/var/www/private/db-config.ini');
     $conn = new mysqli($config['servername'], $config['username'], $config['password'], $config['dbname']);
@@ -78,7 +78,7 @@ function authenticateUser() {
         return;
     }
 
-    $stmt = $conn->prepare("SELECT member_id, fname, lname, password FROM gymbros_members WHERE email=?");
+    $stmt = $conn->prepare("SELECT member_id, fname, lname, password, membership FROM gymbros_members WHERE email=?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -89,11 +89,13 @@ function authenticateUser() {
         $fname = $row["fname"];
         $lname = $row["lname"];
         $pwd_hashed = $row["password"];
+        $membership = $row["membership"];
 
         // Verify password
         if (password_verify($pwd, $pwd_hashed)) {
             $_SESSION["email"] = $email;
             $_SESSION["user_id"] = $user_id;
+            $_SESSION["membership"] = $membership;
 
             // "Remember Me" functionality
             if ($remember) {

@@ -60,7 +60,7 @@
         // User is logged in and selected a new membership
         $newPlan = $_GET['newplan'];
 
-        if ($newPlan != 'basic') {
+        if ($newPlan != 'Basic') {
             // Prevent updating of other membership types here
             header("Location: membership.php");
         } else {

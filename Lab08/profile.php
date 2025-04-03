@@ -196,7 +196,7 @@ $formattedDate = $joinDate->format('F j, Y');
                         <h5 class="mb-0">Membership Benefits</h5>
                     </div>
                     <div class="card-body">
-                        <?php if ($user['membership'] == 'basic'): ?>
+                        <?php if ($user['membership'] == 'Basic'): ?>
                             <p><i class="bi bi-check-circle-fill text-success"></i> 1 Hour Gym Access daily</p>
                             <p><i class="bi bi-x-circle-fill text-danger"></i> Free Locker</p>
                             <p><i class="bi bi-x-circle-fill text-danger"></i> Protein Shake</p>

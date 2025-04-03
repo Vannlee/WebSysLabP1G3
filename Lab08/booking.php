@@ -26,8 +26,8 @@
                         b.date, 
                         b.slot,
                         CASE 
-                          WHEN b.date >= CURDATE() THEN 'upcoming'
-                          ELSE 'over'
+                          WHEN b.date >= CURDATE() THEN 'Upcoming'
+                          ELSE 'Over'
                         END AS status
                     FROM booking b 
                     JOIN gymbros_members gm ON b.member_id = gm.member_id
@@ -70,6 +70,7 @@
                                     <th>Date</th>
                                     <th>Slot</th>
                                     <th>Status</th>
+                                    <th colspan="2">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -83,6 +84,14 @@
                                             echo "<td>" . htmlspecialchars($row['date']) . "</td>";
                                             echo "<td>" . htmlspecialchars($row['slot']) . "</td>";
                                             echo "<td>" . htmlspecialchars($row['status']) . "</td>";
+                                            // Edit button
+                                            if ($row['status'] === 'Upcoming') {
+                                                echo "<td><a href='edit_booking.php?id=" . htmlspecialchars($row['booking_id']) . "' class='btn btn-sm btn-warning action-btn'>Edit</a></td>";
+                                            } else {
+                                                echo "<td><span class='btn btn-sm btn-secondary action-btn disabled'>Edit</span></td>";
+                                            }                                            
+                                            // Delete button
+                                            echo "<td><a href='process_delete_booking.php?id=" . htmlspecialchars($row['booking_id']) . "' class='btn btn-sm btn-danger action-btn' onclick='return confirm(\"Are you sure you want to delete this booking?\");'>Delete</a></td>";
                                             echo "</tr>";
                                         }
                                     } else {
