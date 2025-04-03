@@ -59,7 +59,7 @@ if (session_status() === PHP_SESSION_NONE) {
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="images/register.png" alt="User" title="User" width="50"/>
+                            <img src="images/register.png" alt="User" title="User" width="50">
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                             <li><a class="dropdown-item" href="profile.php">Profile</a></li>

@@ -8,6 +8,7 @@
         <meta name="description" content="Gymbros - Landing Page">
         <?php
             include "inc/head.inc.php";
+            include "inc/enablejs.inc.php";
         ?>
         <link rel="stylesheet" href="css/jumbotron.css">
 
@@ -15,7 +16,6 @@
     <body>
         <?php
             include "inc/nav.inc.php";
-            include "inc/enablejs.inc.php";
 
             displayWelcome();
             include "inc/carousel.inc.php";

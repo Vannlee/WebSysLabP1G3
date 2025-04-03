@@ -12,12 +12,12 @@
         <title>Leave a Feedback - Gymbros</title>
         <?php
             include "inc/head.inc.php";
+            include "inc/enablejs.inc.php";
         ?>
     </head>
     <body>
         <?php
             include "inc/nav.inc.php";
-            include "inc/enablejs.inc.php";
         ?>
         <main id="main-content" class="container">
             <h1>So Sorry to Lose You</h1>
