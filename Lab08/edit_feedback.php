@@ -1,0 +1,77 @@
+<?php
+    session_start();
+
+    $config = parse_ini_file('/var/www/private/db-config.ini');
+    $conn = new mysqli($config['servername'], $config['username'], $config['password'], $config['dbname']);
+
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    
+    // Function to check if user is logged in
+    function isLoggedIn() {
+        return isset($_SESSION['email']);
+    } 
+    
+    // Check if user is logged in
+    if (!isLoggedIn()) {
+        // Redirect to login page if not logged in
+        header("Location: login.php");
+        exit();
+    } else {
+        $id = $_SESSION['user_id'];
+    }
+    
+    if (isset($_GET['id']) && isLoggedIn()) {
+        // User is logged in and feedback id to be updated is present
+        $f_id = $_GET['id'];
+
+        $stmt = $conn->prepare("SELECT member_id FROM Gymbros.membership_feedback WHERE feedback_id = ?");
+        $stmt->bind_param("i",  $feedback_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+                
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+        
+            if ($user_id != $row["member_id"]) {
+                $stmt->close();
+                $conn->close();
+                header("Location: feedback.php");
+                exit();
+            }
+        }
+    } else {
+        header("Location: feedback.php");
+        exit();
+    }
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Update Feedback - Gymbros</title>
+    <?php
+        include "inc/head.inc.php";
+    ?>
+</head>
+<body>
+    <?php 
+        include "inc/nav.inc.php";
+    ?>
+    
+    <main class="container">
+        <form action="update_feedback.php" method="post">
+            <input type="hidden" name="feedback_id" value="<?php htmlspecialchars($f_id) ?>">
+            <input type="hidden" name="user_id" value="<?php htmlspecialchars($id) ?>">
+            <div class="alert alert-light mt-4">
+                <h1>Update Feedback</h1>
+                <label for="feedback_content" class="form-label">New Content:</label>
+                <textarea class="form-control" id="feedback_content" name="feedback_content" rows="5" required></textarea>
+            </div>
+            <button type="submit" name="update_feedback" class="btn btn-success" style="float: right;">Update</button>
+        </form>
+    </main>
+    <?php include "inc/footer.inc.php"; ?>
+    </body>
+</html>
