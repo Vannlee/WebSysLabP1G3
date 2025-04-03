@@ -1,7 +1,5 @@
 <?php
-// Set timezone so that all DateTime operations use the correct time
 date_default_timezone_set('Asia/Singapore');
-
 session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -33,7 +31,7 @@ if (empty($_POST['booking_id']) || empty($_POST['bookingDate']) || empty($_POST[
 } else {
     $booking_id  = intval($_POST['booking_id']);
     $bookingDate = sanitize_input($_POST['bookingDate']);  // Expected in "Y-m-d" format
-    $slot        = sanitize_input($_POST['slot']);         // "morning" or "afternoon"
+    $slot        = sanitize_input($_POST['slot']);         // Expected to be "morning" or "afternoon"
     $loc_id      = intval($_POST['loc_id']);
 }
 
@@ -43,61 +41,56 @@ if ($bookingDate < date('Y-m-d')) {
     $success = false;
 }
 
-// If booking is for today, validate that the session has not ended
+$config = parse_ini_file('/var/www/private/db-config.ini');
+try {
+    $pdo = new PDO("mysql:host={$config['servername']};dbname={$config['dbname']};charset=utf8",
+                   $config['username'], $config['password']);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    $errorMsg .= "Database connection failed: " . $e->getMessage() . "<br>";
+    $success = false;
+}
+
 if ($success && $bookingDate == date('Y-m-d')) {
-    // Connect to DB via PDO for time validation
-    $config = parse_ini_file('/var/www/private/db-config.ini');
-    try {
-        $pdo = new PDO("mysql:host={$config['servername']};dbname={$config['dbname']};charset=utf8",
-                       $config['username'], $config['password']);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    } catch (PDOException $e) {
-        $errorMsg .= "Database connection failed: " . $e->getMessage() . "<br>";
+    // For bookings on today, check that the session hasn't ended.
+    $locQuery = "SELECT morning_slot, afternoon_slot FROM location WHERE loc_id = ?";
+    $stmt = $pdo->prepare($locQuery);
+    $stmt->execute([$loc_id]);
+    $locData = $stmt->fetch(PDO::FETCH_ASSOC);
+    if (!$locData) {
+        $errorMsg .= "Location not found for time validation.<br>";
         $success = false;
-    }
-    
-    if ($success) {
-        // Retrieve the time range for the selected slot from the location table
-        $locQuery = "SELECT morning_slot, afternoon_slot FROM location WHERE loc_id = ?";
-        $stmt = $pdo->prepare($locQuery);
-        $stmt->execute([$loc_id]);
-        $locData = $stmt->fetch(PDO::FETCH_ASSOC);
-        if (!$locData) {
-            $errorMsg .= "Location not found for time validation.<br>";
-            $success = false;
+    } else {
+        if ($slot === "morning") {
+            $time_range = $locData['morning_slot']; // e.g. "07:00 - 10:00"
+        } elseif ($slot === "afternoon") {
+            $time_range = $locData['afternoon_slot']; // e.g. "13:00 - 16:00"
         } else {
-            if ($slot === "morning") {
-                $time_range = $locData['morning_slot']; // e.g. "07:00 - 10:00"
-            } elseif ($slot === "afternoon") {
-                $time_range = $locData['afternoon_slot']; // e.g. "13:00 - 16:00"
-            } else {
-                $errorMsg .= "Invalid slot selection.<br>";
+            $errorMsg .= "Invalid slot selection.<br>";
+            $success = false;
+        }
+        
+        if ($success) {
+            $time_parts = explode(' - ', $time_range);
+            if (count($time_parts) < 2) {
+                $errorMsg .= "Invalid time range format for the selected slot.<br>";
                 $success = false;
-            }
-            
-            if ($success) {
-                $time_parts = explode(' - ', $time_range);
-                if (count($time_parts) < 2) {
-                    $errorMsg .= "Invalid time range format for the selected slot.<br>";
+            } else {
+                // Use the end time from the range for validation
+                $end_time_str = trim($time_parts[1]);
+                $end_dt = new DateTime($bookingDate . ' ' . $end_time_str);
+                $current_dt = new DateTime();
+                if ($current_dt > $end_dt) {
+                    $errorMsg .= "Cannot update booking: the $slot session has already ended today.<br>";
                     $success = false;
-                } else {
-                    // Use the end time from the range
-                    $end_time_str = trim($time_parts[1]);
-                    $end_dt = new DateTime($bookingDate . ' ' . $end_time_str);
-                    $current_dt = new DateTime();
-                    if ($current_dt > $end_dt) {
-                        $errorMsg .= "Cannot update booking: the $slot session has already ended today.<br>";
-                        $success = false;
-                    }
                 }
             }
         }
     }
 }
 
-// Now, perform capacity check to ensure there is room in the new slot
 if ($success) {
-    // Check if there are available slots (excluding the current booking)
+    // Capacity check: ensure that the updated slot is not already full (excluding the current booking)
     $capacityQuery = "SELECT slots_availability FROM location WHERE loc_id = ?";
     $stmt = $pdo->prepare($capacityQuery);
     $stmt->execute([$loc_id]);
@@ -127,16 +120,24 @@ if ($success) {
     $updateQuery = "UPDATE booking SET date = ?, slot = ?, loc_id = ? WHERE booking_id = ? AND member_id = ?";
     $stmt = $pdo->prepare($updateQuery);
     $stmt->execute([$bookingDate, $slot, $loc_id, $booking_id, $member_id]);
+    
+    // If no rows were updated, it could be because no changes were made.
     if ($stmt->rowCount() === 0) {
-        $errorMsg .= "No booking updated. Either the booking was not found or you are not authorized.<br>";
-        $success = false;
+        // Treat as success with a note that no changes were detected.
+        $errorMsg .= "No changes were made to the booking.<br>";
+        // Optionally, set success = true here, so the message is not treated as a fatal error.
+        // For now, we treat it as a valid update.
     }
 }
 
 // Display feedback
 echo "<main class='container'>";
 if ($success) {
-    echo "<div class='alert alert-success mt-4'><h3>Booking Updated Successfully!</h3></div>";
+    echo "<div class='alert alert-success mt-4'><h3>Booking Updated Successfully!</h3>";
+    if (strpos($errorMsg, "No changes were made") !== false) {
+        echo "<p>No changes were made to your booking.</p>";
+    }
+    echo "</div>";
     echo "<p><a class='btn btn-primary' href='booking.php'>Back to My Bookings</a></p>";
 } else {
     echo "<div class='alert alert-danger mt-4'><h3>Update Failed</h3><p>" . $errorMsg . "</p></div>";
