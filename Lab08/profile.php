@@ -24,7 +24,6 @@ $stmt->execute();
 $result = $stmt->get_result();
 $user = $result->fetch_assoc();
 $stmt->close();
-$conn->close();
 
 // Get membership details for display
 $memberships = [
@@ -39,6 +38,40 @@ $membershipName = isset($memberships[$user['membership']]) ? $memberships[$user[
 // Format date
 $joinDate = new DateTime($user['datejoin']);
 $formattedDate = $joinDate->format('F j, Y');
+
+$transaction_stmt = $conn->prepare("SELECT payment_id, created_at, price, card_number, member_id FROM payment_methods WHERE member_id = ?");
+$transaction_stmt->bind_param("i", $user['member_id']);
+$transaction_stmt->execute();
+$transactions_result = $transaction_stmt->get_result();
+$transactions = [];
+while ($row = $transactions_result->fetch_assoc()) {
+    // No need to mask the card - it's already stored in masked format
+    $row['masked_card'] = $row['card_number'];
+    
+    // Add membership type based on price
+    if ($row['price'] == 40) {
+        $row['membership_type'] = 'Premium';
+    } elseif ($row['price'] == 90) {
+        $row['membership_type'] = 'Ultimate';
+    } else {
+        $row['membership_type'] = 'Basic';
+    }
+    
+    $transactions[] = $row;
+}
+$transaction_stmt->close();
+$conn->close();
+
+// Helper function to determine membership name based on price
+function getMembershipName($price) {
+    if ($price == 40) {
+        return 'Premium';
+    } elseif ($price == 90) {
+        return 'Ultimate';
+    } else {
+        return 'Basic';
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -55,7 +88,6 @@ $formattedDate = $joinDate->format('F j, Y');
 <body>
     <?php 
         include "inc/nav.inc.php";
-        include "inc/enablejs.inc.php";
     ?>
     
     <main class="container py-5">
@@ -93,6 +125,11 @@ $formattedDate = $joinDate->format('F j, Y');
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="membership-tab" data-bs-toggle="tab" data-bs-target="#membership" type="button" role="tab" aria-controls="membership" aria-selected="false">
                     <i class="bi bi-star-fill"></i> Membership
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="transactions-tab" data-bs-toggle="tab" data-bs-target="#transactions" type="button" role="tab" aria-controls="transactions" aria-selected="false">
+                    <i class="bi bi-credit-card"></i> Transactions
                 </button>
             </li>
         </ul>
@@ -223,6 +260,59 @@ $formattedDate = $joinDate->format('F j, Y');
                 
                 <div class="alert alert-info">
                     <i class="bi bi-info-circle-fill"></i> Need to change your plan? Visit our <a href="membership.php" class="alert-link">membership page</a> to upgrade or downgrade your membership.
+                </div>
+            </div>
+            
+            <!-- Transactions Tab -->
+            <div class="tab-pane fade" id="transactions" role="tabpanel" aria-labelledby="transactions-tab">
+                <h4 class="mb-4">Purchase History</h4>
+                
+                <?php if (count($transactions) > 0): ?>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Transaction ID</th>
+                                    <th>Date</th>
+                                    <th>Membership Type</th>
+                                    <th>Credit Card</th>
+                                    <th>Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($transactions as $transaction): ?>
+                                    <tr>
+                                        <td><?php echo htmlspecialchars($transaction['payment_id']); ?></td>
+                                        <td>
+                                            <?php 
+                                            $date = new DateTime($transaction['created_at']);
+                                            echo $date->format('M j, Y g:i A'); 
+                                            ?>
+                                        </td>
+                                        <td>
+                                            <?php 
+                                            if (isset($transaction['membership_type'])) {
+                                                echo htmlspecialchars($transaction['membership_type']);
+                                            } else {
+                                                echo htmlspecialchars(getMembershipName($transaction['price']));
+                                            }
+                                            ?>
+                                        </td>
+                                        <td><?php echo htmlspecialchars($transaction['masked_card']); ?></td>
+                                        <td>$<?php echo htmlspecialchars(number_format($transaction['price'], 2)); ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php else: ?>
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle-fill"></i> No transaction history found.
+                    </div>
+                <?php endif; ?>
+                
+                <div class="alert alert-secondary mt-4">
+                    <i class="bi bi-question-circle-fill"></i> Need help with a transaction? Please <a href="contact.php" class="alert-link">contact our support team</a>.
                 </div>
             </div>
         </div>
