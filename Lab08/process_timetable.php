@@ -8,13 +8,9 @@ include "inc/head.inc.php";
 include "inc/nav.inc.php";
 
 $errorMsg = "";
+$warningMsg = "";
 $success = true;
-
-// Ensure the request is a POST
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header("Location: timetable.php");
-    exit();
-}
+$showWarningConfirmation = false;
 
 // Check if the user is logged in
 if (!isset($_SESSION['user_id'])) {
@@ -24,7 +20,13 @@ if (!isset($_SESSION['user_id'])) {
     $member_id = $_SESSION['user_id'];
 }
 
-// Validate required fields: date, loc_id, and slot (expected to be "morning" or "afternoon")
+// Ensure the request is a POST
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header("Location: timetable.php");
+    exit();
+}
+
+// Validate required fields: date, loc_id, and slot
 if (empty($_POST["date"]) || empty($_POST["loc_id"]) || empty($_POST["slot"])) {
     $errorMsg .= "Date, location, and slot are required.<br>";
     $success = false;
@@ -32,14 +34,17 @@ if (empty($_POST["date"]) || empty($_POST["loc_id"]) || empty($_POST["slot"])) {
     // Sanitize inputs
     $bookingDate = sanitize_input($_POST["date"]);
     $location    = sanitize_input($_POST["loc_id"]);
-    $slot        = sanitize_input($_POST["slot"]); // "morning" or "afternoon"
+    $slot        = sanitize_input($_POST["slot"]);
+    
+    // Check if the booking date is in the past
+    if ($bookingDate < date('Y-m-d')) {
+        $errorMsg .= "Cannot book sessions for a past date.<br>";
+        $success = false;
+    }
 }
 
-// Check if the booking date is in the past
-if ($bookingDate < date('Y-m-d')) {
-    $errorMsg .= "Cannot book sessions for a past date.<br>";
-    $success = false;
-}
+// Check if this is a confirmation of a booking with warning
+$confirmOverride = isset($_POST["confirm_override"]) && $_POST["confirm_override"] == "1";
 
 if ($success) {
     // Connect to database using PDO
@@ -55,8 +60,8 @@ if ($success) {
 }
 
 if ($success) {
-    // Get location details
-    $locationQuery = "SELECT slots_availability FROM Gymbros.location WHERE loc_id = ?";
+    // Get location details - updated field names to match your database
+    $locationQuery = "SELECT slots_availability, loc_name FROM Gymbros.location WHERE loc_id = ?";
     $stmt = $pdo->prepare($locationQuery);
     $stmt->execute([$location]);
     $locationData = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -66,8 +71,9 @@ if ($success) {
         $success = false;
     } else {
         $totalCapacity = $locationData['slots_availability'];
+        $currentGymName = $locationData['loc_name'];
         
-        // Count existing bookings for this timeslot (using unified slot value)
+        // Count existing bookings for this timeslot
         $countQuery = "
             SELECT COUNT(*) as booking_count 
             FROM booking 
@@ -83,21 +89,33 @@ if ($success) {
             $errorMsg .= "Sorry, this session is now full.<br>";
             $success = false;
         } else {
-            // Check if user already has a booking for this slot
+            // Check if user already has a booking for this slot at another location
             $checkExistingQuery = "
-                SELECT COUNT(*) as existing_count 
-                FROM booking 
-                WHERE member_id = ? AND loc_id = ? AND date = ? AND slot = ?
+                SELECT b.loc_id, l.loc_name as gym_name
+                FROM booking b
+                JOIN Gymbros.location l ON b.loc_id = l.loc_id
+                WHERE b.member_id = ? AND b.date = ? AND b.slot = ? 
             ";
             $stmt = $pdo->prepare($checkExistingQuery);
-            $stmt->execute([$member_id, $location, $bookingDate, $slot]);
-            $existingData = $stmt->fetch(PDO::FETCH_ASSOC);
+            $stmt->execute([$member_id, $bookingDate, $slot]);
+            $existingBooking = $stmt->fetch(PDO::FETCH_ASSOC);
             
-            if ($existingData['existing_count'] > 0) {
-                $errorMsg .= "You already have a booking for this session.<br>";
-                $success = false;
+            if ($existingBooking && $existingBooking['loc_id'] != $location) {
+                // User already has a booking at another gym for the same slot
+                $warningMsg = "You already have a booking for " . htmlspecialchars($bookingDate) . 
+                              " (" . htmlspecialchars($slot) . " session) at " . 
+                              htmlspecialchars($existingBooking['gym_name']) . ".";
+                
+                if ($confirmOverride) {
+                    // User confirmed they want to proceed despite the warning
+                    processBooking($member_id, $location, $bookingDate, $slot);
+                } else {
+                    // Show warning and ask for confirmation
+                    $showWarningConfirmation = true;
+                    $success = false;
+                }
             } else {
-                // Process the booking
+                // No booking conflict, proceed normally
                 processBooking($member_id, $location, $bookingDate, $slot);
             }
         }
@@ -106,6 +124,7 @@ if ($success) {
 
 // Display success or error message
 echo "<main class='container'>";
+
 if ($success) {
     echo "<title>Booking Successful</title>";
     echo "<div class='alert alert-success mt-4'>";
@@ -115,13 +134,36 @@ if ($success) {
     echo "<p><a class='btn btn-primary' href='timetable.php'>Back to Timetable</a> ";
     echo "<a class='btn btn-secondary' href='booking.php'>View My Bookings</a></p>";
 } else {
-    echo "<title>Booking Failed</title>";
-    echo "<div class='alert alert-danger mt-4'>";
-    echo "<h3>Booking Failed</h3>";
-    echo "<h4>Error:</h4><p>" . $errorMsg . "</p>";
-    echo "</div>";
-    echo "<p><a class='btn btn-primary' href='timetable.php'>Back to Timetable</a></p>";
+    echo "<title>Booking Status</title>";
+    
+    if ($showWarningConfirmation) {
+        echo "<div class='alert alert-warning mt-4'>";
+        echo "<h3>Booking Confirmation Needed</h3>";
+        echo "<p><strong>Warning:</strong> " . $warningMsg . "</p>";
+        echo "<p>Do you want to proceed with this booking anyway?</p>";
+        
+        echo "<form action='" . htmlspecialchars($_SERVER['PHP_SELF']) . "' method='POST'>
+                <input type='hidden' name='date' value='" . htmlspecialchars($bookingDate) . "'>
+                <input type='hidden' name='loc_id' value='" . htmlspecialchars($location) . "'>
+                <input type='hidden' name='slot' value='" . htmlspecialchars($slot) . "'>
+                <input type='hidden' name='confirm_override' value='1'>
+                <div class='btn-group'>
+                    <button type='submit' class='btn btn-warning'>Yes, Book Anyway</button>
+                    <a href='timetable.php' class='btn btn-secondary'>No, Cancel</a>
+                </div>
+            </form>";
+        echo "</div>";
+    } else {
+        echo "<div class='alert alert-danger mt-4'>";
+        echo "<h3>Booking Failed</h3>";
+        if (!empty($errorMsg)) {
+            echo "<p>" . $errorMsg . "</p>";
+        }
+        echo "</div>";
+        echo "<p><a class='btn btn-primary' href='timetable.php'>Back to Timetable</a></p>";
+    }
 }
+
 echo "</main>";
 
 include "inc/footer.inc.php";
@@ -131,19 +173,11 @@ function sanitize_input($data) {
     return htmlspecialchars(stripslashes(trim($data)));
 }
 
-/**
- * Process the booking by inserting a new record into the database.
- * This function inserts into the unified booking schema using the $slot value.
- */
+// Inserts into the unified booking schema using the $slot value.
 function processBooking($member_id, $location, $bookingDate, $slot) {
-    global $errorMsg, $success;
+    global $errorMsg, $success, $pdo;
 
     try {
-        $config = parse_ini_file('/var/www/private/db-config.ini');
-        $pdo = new PDO("mysql:host={$config['servername']};dbname={$config['dbname']};charset=utf8", 
-                      $config['username'], $config['password']);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
         // Prepare the INSERT statement into the unified booking table
         $query = "INSERT INTO booking (member_id, loc_id, date, slot) VALUES (?, ?, ?, ?)";
         $stmt = $pdo->prepare($query);
