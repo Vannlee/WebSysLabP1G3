@@ -9,6 +9,8 @@
         <?php
             include "inc/head.inc.php";
         ?>
+        <link rel="stylesheet" href="css/jumbotron.css">
+
     </head>
     <body>
         <?php
@@ -119,24 +121,18 @@
                 $greeting = "Good evening";
                 }
 
-                echo '<style>
-                    .fade-in {
-                        animation: fadeIn 1s ease-in;
-                    }
-                    @keyframes fadeIn {
-                        0% { opacity: 0; transform: translateY(20px); }
-                        100% { opacity: 1; transform: translateY(0); }
-                    }
-                </style>';
-
-                echo '<div class="welcome-message text-center my-4 fade-in">
-                    <h1 class="mb-3">' . $greeting . ', <span class="text-primary">' . htmlspecialchars($fname) . '</span>!</h1>
-                    <p class="text-muted">What would you like to do today?</p>
-                    <div class="btn-group mt-3">
-                        <a href="bookings.php" class="btn btn-outline-primary">Book a Session</a>
-                        <a href="profile.php" class="btn btn-outline-secondary">View Profile</a>
+                echo '<div class="welcome-jumbotron text-center fade-in">
+                <div class="container">
+                    <h1 class="display-4">' . $greeting . ', <span class="text-warning">' . htmlspecialchars($fname) . '</span>!</h1>
+                    <p class="lead">Ready to crush your fitness goals today?</p>
+                    <hr class="my-4 bg-light">
+                    <p>What would you like to do?</p>
+                    <div class="mt-4">
+                        <a href="bookings.php" class="btn btn-primary btn-lg">Book a Session</a>
+                        <a href="profile.php" class="btn btn-outline-light btn-lg">View Profile</a>
                     </div>
-                </div>';
+                </div>
+            </div>';
 
             }
         }
