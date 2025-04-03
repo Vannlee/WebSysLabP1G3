@@ -116,11 +116,11 @@ $booking_result = $stmt->get_result();
                         echo "<td>" . htmlspecialchars($status) . "</td>";
                         if ($status === "Upcoming") {
                             echo "<td><a href='edit_booking.php?id=" . htmlspecialchars($row['booking_id']) . "' class='btn btn-sm btn-warning action-btn'>Edit</a></td>";
+                            echo "<td><a href='process_delete_booking.php?id=" . htmlspecialchars($row['booking_id']) . "' class='btn btn-sm btn-danger action-btn' onclick='return confirm(\"Are you sure you want to delete this booking?\");'>Delete</a></td>";
                         } else {
                             echo "<td><span class='btn btn-sm btn-secondary action-btn disabled'>Edit</span></td>";
+                            echo "<td><span class='btn btn-sm btn-secondary action-btn disabled'>Delete</span></td>";
                         }
-                        // Delete button is always available
-                        echo "<td><a href='process_delete_booking.php?id=" . htmlspecialchars($row['booking_id']) . "' class='btn btn-sm btn-danger action-btn' onclick='return confirm(\"Are you sure you want to delete this booking?\");'>Delete</a></td>";
                         echo "</tr>";
                     }
                 } else {
