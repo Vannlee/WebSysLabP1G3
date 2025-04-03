@@ -1,4 +1,8 @@
 <?php
+/**
+ * Timetable page for Group 3's Gym website
+ * Displays available gym sessions and allows users to book them
+ */
 session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
