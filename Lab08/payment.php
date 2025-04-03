@@ -103,17 +103,16 @@
         
         // Process payment if no errors
         if (empty($errors)) {
-            // Store payment information in database (FOR EDUCATIONAL PURPOSES ONLY)
+            // Store payment information in database (CVV is NOT stored)
             $stmt = $conn->prepare("INSERT INTO Gymbros.payment_methods 
-                (member_id, card_name, card_number, expiry_date, cvv, billing_address) 
-                VALUES (?, ?, ?, ?, ?, ?)");
+                (member_id, card_name, card_number, expiry_date, billing_address) 
+                VALUES (?, ?, ?, ?, ?)");
             
-            $stmt->bind_param("isssss", 
+            $stmt->bind_param("issss", 
                 $_SESSION['user_id'], 
                 $_POST['card_name'],
                 $_POST['card_number'],
                 $_POST['expiry_date'],
-                $_POST['cvv'],
                 $_POST['billing_address']
             );
             

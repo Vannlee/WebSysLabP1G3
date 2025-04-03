@@ -146,7 +146,7 @@ if ($success) {
         }
     }
     
-    // Validate CVV
+    // Validate CVV - Still validate but don't store
     if (empty($_POST['cvv'])) {
         $errorMsg .= "CVV is required.<br>";
         $success = false;
@@ -177,17 +177,16 @@ if ($success) {
 
 // Process payment if no errors
 if ($success) {
-    // Store payment information in database
+    // Store payment information in database (excluding CVV)
     $stmt = $conn->prepare("INSERT INTO Gymbros.payment_methods 
-        (member_id, card_name, card_number, expiry_date, cvv, billing_address) 
-        VALUES (?, ?, ?, ?, ?, ?)");
+        (member_id, card_name, card_number, expiry_date, billing_address) 
+        VALUES (?, ?, ?, ?, ?)");
     
-    $stmt->bind_param("isssss", 
+    $stmt->bind_param("issss", 
         $_SESSION['user_id'], 
         $_POST['card_name'],
         $_POST['card_number'],
         $_POST['expiry_date'],
-        $_POST['cvv'],
         $_POST['billing_address']
     );
     
