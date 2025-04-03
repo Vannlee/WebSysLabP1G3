@@ -11,7 +11,7 @@ if (session_status() === PHP_SESSION_NONE) {
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <a class="navbar-brand m-2" href="index.php">
-            <img src="images/gym-logo.png" alt="Fitness Gym" title="Fitness Gym" height="42" width="88"/>
+            <img src="images/gym-logo.png" alt="Fitness Gym" title="Fitness Gym" height="42" width="88">
         </a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"

@@ -5,7 +5,7 @@
 <html lang="en">
     <head>
         <title>Gymbros</title>      
-        <meta name="description" content="Gymbros - Landing Page"/>
+        <meta name="description" content="Gymbros - Landing Page">
         <?php
             include "inc/head.inc.php";
         ?>
