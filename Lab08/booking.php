@@ -53,6 +53,10 @@ $booking_result = $stmt->get_result();
         th, td { border: 1px solid #ccc; padding: 10px; text-align: center; }
         th { background-color: #f5f5f5; }
         .action-btn { margin-right: 5px; }
+        .btn.disabled, .btn:disabled {
+            background-color: #000000;
+            color: #ffffff;
+        }
     </style>
 </head>
 <body>
