@@ -82,7 +82,7 @@ foreach ($locations as $location) {
         $morning_slots[] = [
             'loc_id'            => $location['loc_id'],
             'loc_name'          => $location['loc_name'],
-            'time_range'        => $location['morning_slot'],  // e.g. "07:00 - 10:00"
+            'time_range'        => $location['morning_slot'],  
             'slots_availability'=> $location['slots_availability'],
             'slots_left'        => $slots_left
         ];
@@ -171,15 +171,16 @@ usort($afternoon_slots, function($a, $b) {
                 <tbody>
                 <?php
                 foreach ($morning_slots as $slot) {
-                    $time_range = $slot['time_range']; // e.g. "07:00 - 10:00"
-                    $time_parts = explode('-', $time_range); // If your DB has "07:00 - 10:00" with spaces
-                    $start_time_str = trim($time_parts[0]);  // "07:00"
-                    $end_time_str   = trim($time_parts[1]);  // "10:00"
+                    $time_range = $slot['time_range']; 
+                    $time_parts = explode('-', $time_range); 
+                    $end_time_str   = trim($time_parts[1]);  
 
-                    $start_dt = new DateTime($selected_date . ' ' . $start_time_str);
                     $end_dt   = new DateTime($selected_date . ' ' . $end_time_str);
 
                     $is_passed = false;
+                    
+                    $is_full = ($slot['slots_left'] <= 0);
+
                     if ($selected_date < $current_date) {
                         // The date is in the past
                         $is_passed = true;
@@ -189,8 +190,6 @@ usort($afternoon_slots, function($a, $b) {
                             $is_passed = true;
                         }
                     }
-
-                    $is_full = ($slot['slots_left'] <= 0);
 
                     if ($is_passed) {
                         $statusText = "<span class='passed'>Time Passed</span>";
@@ -248,15 +247,16 @@ usort($afternoon_slots, function($a, $b) {
                 <tbody>
                 <?php
                 foreach ($afternoon_slots as $slot) {
-                    $time_range = $slot['time_range']; // e.g. "07:00 - 10:00"
-                    $time_parts = explode('-', $time_range); // If your DB has "07:00 - 10:00" with spaces
-                    $start_time_str = trim($time_parts[0]);  // "07:00"
-                    $end_time_str   = trim($time_parts[1]);  // "10:00"
+                    $time_range = $slot['time_range']; 
+                    $time_parts = explode('-', $time_range);  
+                    $end_time_str   = trim($time_parts[1]);  
 
-                    $start_dt = new DateTime($selected_date . ' ' . $start_time_str);
                     $end_dt   = new DateTime($selected_date . ' ' . $end_time_str);
 
                     $is_passed = false;
+
+                    $is_full = ($slot['slots_left'] <= 0);
+
                     if ($selected_date < $current_date) {
                         // The date is in the past
                         $is_passed = true;
@@ -266,8 +266,6 @@ usort($afternoon_slots, function($a, $b) {
                             $is_passed = true;
                         }
                     }
-
-                    $is_full = ($slot['slots_left'] <= 0);
 
                     if ($is_passed) {
                         $statusText = "<span class='passed'>Time Passed</span>";
