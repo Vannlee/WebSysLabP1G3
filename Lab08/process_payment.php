@@ -50,7 +50,6 @@ function fetchUserMembershipFromDB($conn, $userId) {
 
 // Get membership details
 $memberships = [
-    'basic' => ['name' => 'Basic', 'price' => 0],
     'Premium' => ['name' => 'Premium', 'price' => 40],
     'Ultimate' => ['name' => 'Ultimate', 'price' => 90]
 ];

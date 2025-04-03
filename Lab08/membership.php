@@ -66,7 +66,7 @@
                         var confirmAction = confirm('Are you sure you want to change to Basic membership?');
                         if (confirmAction) {
                             // Store the new plan selection in session
-                            window.location.href = 'update_membership.php?newplan=basic'; // Redirect to update membership
+                            window.location.href = 'update_membership.php?newplan=Basic'; // Redirect to update membership
                         }
                     </script>";
             }
@@ -104,7 +104,7 @@
                 <!-- Free Tier -->
                 <div class="col-md-6 col-lg-4">
                     <div class="card h-100 shadow <?php if(isLoggedIn() && getUserMembership() == 'basic') echo 'border-success'; ?>">
-                        <?php if(isLoggedIn() && getUserMembership() == 'basic'): ?>
+                        <?php if(isLoggedIn() && getUserMembership() == 'Basic'): ?>
                             <div class="card-header bg-success text-white text-center">Current Plan</div>
                         <?php endif; ?>
                         <div class="card-body text-center">
@@ -116,7 +116,7 @@
                             <p><i class="bi bi-x-circle-fill text-danger"></i> Gym Item Discounts</p>
                             <p><i class="bi bi-x-circle-fill text-danger"></i> Personal Trainer</p>
                             <p><i class="bi bi-x-circle-fill text-danger"></i> VIP Lounge</p>
-                            <?php if(isLoggedIn() && getUserMembership() == 'basic'): ?>
+                            <?php if(isLoggedIn() && getUserMembership() == 'Basic'): ?>
                                 <button class="btn btn-success" disabled>Current Plan</button>
                             <?php else: ?>
                                 <a href="?select=basic" class="btn btn-outline-primary">Select</a>
