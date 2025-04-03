@@ -72,7 +72,7 @@
                     echo '<img class="img-thumbnail" src="' . $row["image_path"] . '" 
                             alt="' . htmlspecialchars($row["loc_name"]) . '" title="Click to make a booking"
                             location="' . htmlspecialchars($row["loc_addr"]) . '" 
-                            booking-slots="' . htmlspecialchars($row["morning_slot"]) . ', ' . htmlspecialchars($row["afternoon_slot"]) . '"
+                            booking_slots="' . htmlspecialchars($row["morning_slot"]) . ', ' . htmlspecialchars($row["afternoon_slot"]) . '"
                             contact="' . htmlspecialchars($row["loc_contact"]) . '">';
                     echo '</figure>';
                     echo '<h3 class="article-heading text-center h5">' . htmlspecialchars($row["loc_name"]) . '</h3>';
