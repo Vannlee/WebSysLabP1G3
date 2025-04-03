@@ -3,7 +3,7 @@
 
     // Define functions
     function isLoggedIn() {
-        return isset($_SESSION['user_id']);
+        return isset($_SESSION['email']);
     }
 
     // Check if user is logged in
@@ -11,7 +11,24 @@
         header("Location: login.php");
         exit();
     } else {
-        $id = $_SESSION["user_id"];
+        $id = $_SESSION['user_id'];
+        if(isset($_GET['action'])) {
+            $action = $_GET['action'];
+            $f_id = $_GET['id'];
+
+            if ($action == "update") {
+                header("Location: update_feedback.php?id=" . $f_id);
+            }
+            elseif ($action == "delete") {
+                echo "<script>
+                        var confirmAction = confirm('Are you sure you want to delete this feedback record?');
+                        if (confirmAction) {
+                            // Store the new plan selection in session
+                            window.location.href = 'delete_feedback.php?id=" . $f_id . "'; // Redirect to update membership
+                        }
+                    </script>";
+            }
+        }
     }
 ?>
 <!DOCTYPE html>
@@ -67,7 +84,7 @@
                             <thead>
                                 <tr>
                                     <th style="width:10%">Feedback ID</th>
-                                    <th style="width:50%">Content</th>
+                                    <th style="width:60%">Content</th>
                                     <th>Date Created</th>
                                     <th>Action</th>
                                 </tr>
@@ -78,8 +95,8 @@
                               <td>'.  htmlspecialchars($row['feedback_id']) . '</td>
                               <td>'.  htmlspecialchars($row['content']) . '</td>
                               <td>'.  htmlspecialchars($row['datetime']) . '</td>
-                              <td><a href="edit_feedback.php?id=' . htmlspecialchars($row['feedback_id']) . ' class="btn btn-sm btn-warning action-btn">Edit</a></td>
-                              <td><a href="delete_feedback.php?id=' . htmlspecialchars($row['feedback_id']) . ' class="btn btn-sm btn-danger action-btn onclick=\'return confirm(\"Are you sure you want to delete this booking?\");\'>Delete</a></td>
+                              <td><a href="?action=update&id=' . htmlspecialchars($row['feedback_id']) . '" class="btn btn-sm btn-warning action-btn">Edit</a>
+                                  <a href="?action=delete&id=' . htmlspecialchars($row['feedback_id']) . '" class="btn btn-sm btn-danger action-btn">Delete</a></td>
                           </tr>';
                 }
                 echo '</tbody>
