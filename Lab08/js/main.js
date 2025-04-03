@@ -26,7 +26,7 @@ function displayModal(image) {
     var location = image.target.getAttribute('location');
     var booking_slots = image.target.getAttribute('booking_slots');
     var contact = image.target.getAttribute('contact');
-
+    
     // If modal exists, remove it
     if (popup == null) {
         // Create modal container

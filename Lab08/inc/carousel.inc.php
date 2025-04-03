@@ -1,10 +1,7 @@
 <!-- Membership Carousel-->
 <div id = "gymCarousel" class = "carousel slide" data-bs-ride = "carousel">
-    
-    
     <!-- Carousel Inner -->
     <div class = "carousel-inner">
-        
         <!-- First Slide -->
         <div class = "carousel-item active"> 
             <a href = "membership.php">

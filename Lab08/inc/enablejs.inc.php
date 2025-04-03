@@ -1,4 +1,4 @@
-<noscript>
+        <noscript>
             <style>
                 #main-content {
                     display: none !important;
