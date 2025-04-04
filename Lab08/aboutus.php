@@ -81,8 +81,8 @@
                 <img src="images/john.png" class="card-img-top" alt="Team member">
                 <div class="card-body text-center">
                     <h3 class="card-title">Ong Eugene</h3>
-                    <p class="card-subtitle text-dark mb-3">Founder & CEO</p>
-                    <p class="card-text">Certified fitness professional with 15+ years of experience in the industry.</p>
+                    <p class="card-subtitle text-dark mb-3">Student at SIT</p>
+                    <p class="card-text">Year 1 Information Security Student</p>
                 </div>
             </div>
         </div>
