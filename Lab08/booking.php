@@ -45,106 +45,106 @@ $booking_result = $stmt->get_result();
 ?>
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <title>My Bookings - Gymbros</title>
-    <?php include "inc/head.inc.php"; ?>
-    <style>
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ccc; padding: 10px; text-align: center; }
-        th { background-color: #f5f5f5; }
-        .action-btn { margin-right: 5px; }
-        .btn.disabled, .btn:disabled {
-            background-color: #000000;
-            color: #ffffff;
-        }
-    </style>
-</head>
-<body>
-    <?php include "inc/nav.inc.php"; ?>
-    <main class="container my-4">
-        <h2>My Bookings</h2>
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Booking ID</th>
-                        <th>Member Name</th>
-                        <th>Location</th>
-                        <th>Date</th>
-                        <th>Slot</th>
-                        <th>Status</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    if ($booking_result->num_rows > 0) {
-                        while ($row = $booking_result->fetch_assoc()) {
-                            // Determine status based on the booking date and slot
-                            $status = "";
-                            $bookingDate = $row['date'];
-                            if ($bookingDate > $current_date) {
-                                $status = "Upcoming";
-                            } elseif ($bookingDate < $current_date) {
-                                $status = "Over";
-                            } else {
-                                // Booking date is today; determine based on session time range
-                                if ($row['slot'] === "morning") {
-                                    $time_range = $row['morning_slot']; // e.g. "07:00 - 10:00"
-                                } else {
-                                    $time_range = $row['afternoon_slot']; // e.g. "13:00 - 16:00"
-                                }
-                                // Parse start and end times from the time range
-                                $time_parts = explode(' - ', $time_range);
-                                $start_time_str = trim($time_parts[0]);
-                                $end_time_str = trim($time_parts[1]);
-                                $start_dt = new DateTime($bookingDate . ' ' . $start_time_str);
-                                $end_dt = new DateTime($bookingDate . ' ' . $end_time_str);
-                                $current_dt = new DateTime();
-                                
-                                if ($current_dt < $start_dt) {
+    <head>
+        <title>My Bookings - Gymbros</title>
+        <?php include "inc/head.inc.php"; ?>
+        <style>
+            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            th, td { border: 1px solid #ccc; padding: 10px; text-align: center; }
+            th { background-color: #f5f5f5; }
+            .action-btn { margin-right: 5px; }
+            .btn.disabled, .btn:disabled {
+                background-color: #000000;
+                color: #ffffff;
+            }
+        </style>
+    </head>
+    <body>
+        <?php include "inc/nav.inc.php"; ?>
+        <main class="container my-4">
+            <h1>My Bookings</h1>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Booking ID</th>
+                            <th>Member Name</th>
+                            <th>Location</th>
+                            <th>Date</th>
+                            <th>Slot</th>
+                            <th>Status</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        if ($booking_result->num_rows > 0) {
+                            while ($row = $booking_result->fetch_assoc()) {
+                                // Determine status based on the booking date and slot
+                                $status = "";
+                                $bookingDate = $row['date'];
+                                if ($bookingDate > $current_date) {
                                     $status = "Upcoming";
-                                } elseif ($current_dt >= $start_dt && $current_dt <= $end_dt) {
-                                    $status = "In Session";
-                                } else {
+                                } elseif ($bookingDate < $current_date) {
                                     $status = "Over";
+                                } else {
+                                    // Booking date is today; determine based on session time range
+                                    if ($row['slot'] === "morning") {
+                                        $time_range = $row['morning_slot']; // e.g. "07:00 - 10:00"
+                                    } else {
+                                        $time_range = $row['afternoon_slot']; // e.g. "13:00 - 16:00"
+                                    }
+                                    // Parse start and end times from the time range
+                                    $time_parts = explode(' - ', $time_range);
+                                    $start_time_str = trim($time_parts[0]);
+                                    $end_time_str = trim($time_parts[1]);
+                                    $start_dt = new DateTime($bookingDate . ' ' . $start_time_str);
+                                    $end_dt = new DateTime($bookingDate . ' ' . $end_time_str);
+                                    $current_dt = new DateTime();
+                                    
+                                    if ($current_dt < $start_dt) {
+                                        $status = "Upcoming";
+                                    } elseif ($current_dt >= $start_dt && $current_dt <= $end_dt) {
+                                        $status = "In Session";
+                                    } else {
+                                        $status = "Over";
+                                    }
                                 }
+                                
+                                echo "<tr>";
+                                echo "<td>" . htmlspecialchars($row['booking_id']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['member_name']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['loc_name']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['date']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['slot']) . "</td>";
+                                echo "<td>" . htmlspecialchars($status) . "</td>";
+                                if ($status === "Upcoming") {
+                                    echo "<td><a href='edit_booking.php?id=" . htmlspecialchars($row['booking_id']) . "' class='btn btn-sm btn-warning action-btn'>Edit</a></td>";
+                                    echo "<td>";
+                                    echo "<form action='process_delete_booking.php' method='POST' onsubmit='return confirm(\"Are you sure you want to delete this booking?\");'>";
+                                    echo "<input type='hidden' name='booking_id' value='" . htmlspecialchars($row['booking_id']) . "'>";
+                                    echo "<button type='submit' class='btn btn-sm btn-danger action-btn'>Delete</button>";
+                                    echo "</form>";
+                                    echo "</td>";
+                                } else {
+                                    echo "<td><span class='btn btn-sm btn-secondary action-btn disabled'>Edit</span></td>";
+                                    echo "<td><span class='btn btn-sm btn-secondary action-btn disabled'>Delete</span></td>";
+                                }
+                                echo "</tr>";
                             }
-                            
-                            echo "<tr>";
-                            echo "<td>" . htmlspecialchars($row['booking_id']) . "</td>";
-                            echo "<td>" . htmlspecialchars($row['member_name']) . "</td>";
-                            echo "<td>" . htmlspecialchars($row['loc_name']) . "</td>";
-                            echo "<td>" . htmlspecialchars($row['date']) . "</td>";
-                            echo "<td>" . htmlspecialchars($row['slot']) . "</td>";
-                            echo "<td>" . htmlspecialchars($status) . "</td>";
-                            if ($status === "Upcoming") {
-                                echo "<td><a href='edit_booking.php?id=" . htmlspecialchars($row['booking_id']) . "' class='btn btn-sm btn-warning action-btn'>Edit</a></td>";
-                                echo "<td>";
-                                echo "<form action='process_delete_booking.php' method='POST' onsubmit='return confirm(\"Are you sure you want to delete this booking?\");'>";
-                                echo "<input type='hidden' name='booking_id' value='" . htmlspecialchars($row['booking_id']) . "'>";
-                                echo "<button type='submit' class='btn btn-sm btn-danger action-btn'>Delete</button>";
-                                echo "</form>";
-                                echo "</td>";
-                            } else {
-                                echo "<td><span class='btn btn-sm btn-secondary action-btn disabled'>Edit</span></td>";
-                                echo "<td><span class='btn btn-sm btn-secondary action-btn disabled'>Delete</span></td>";
-                            }
-                            echo "</tr>";
+                        } else {
+                            echo "<tr><td colspan='8'>No bookings found.</td></tr>";
                         }
-                    } else {
-                        echo "<tr><td colspan='8'>No bookings found.</td></tr>";
-                    }
-                    ?>
-                </tbody>
-            </table>
-        </div>
-    </main>
-    <?php
-    $stmt->close();
-    $conn->close();
-    include "inc/footer.inc.php";
-    ?>
-</body>
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+        <?php
+        $stmt->close();
+        $conn->close();
+        include "inc/footer.inc.php";
+        ?>
+    </body>
 </html>
