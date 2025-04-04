@@ -51,7 +51,7 @@ $locations_result = $conn->query($sql_location);
 <body>
     <?php include "inc/nav.inc.php"; ?>
     <main class="container my-4">
-        <h2>Edit Booking</h2>
+        <h1>Edit Booking</h1>
         <form action="process_edit_booking.php" method="POST">
             <input type="hidden" name="booking_id" value="<?php echo htmlspecialchars($booking['booking_id']); ?>">
             
