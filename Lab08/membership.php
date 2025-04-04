@@ -96,8 +96,9 @@
     ?>
     
     <main class="container">
-        <section class="container my-5">
-            <h2 class="text-center mb-4">Choose Your Membership</h2>
+
+    <section class="container my-5">
+            <h1 class="text-center mb-4">Choose Your Membership</h1>
             
             <div class="row justify-content-center g-4">
                 
@@ -108,8 +109,8 @@
                             <div class="card-header bg-success text-white text-center">Current Plan</div>
                         <?php endif; ?>
                         <div class="card-body text-center">
-                            <h5 class="card-title">Basic</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">Free</h6>
+                            <h2 class="card-title">Basic</h2>
+                            <h3 class="card-subtitle mb-2 text-muted">Free</h3>
                             <p><i class="bi bi-check-circle-fill text-success"></i> 1 Hour Gym Access daily</p>
                             <p><i class="bi bi-x-circle-fill text-danger"></i> Free Locker</p>
                             <p><i class="bi bi-x-circle-fill text-danger"></i> Protein Shake</p>
@@ -132,8 +133,8 @@
                             <div class="card-header bg-success text-white text-center">Current Plan</div>
                         <?php endif; ?>
                         <div class="card-body text-center">
-                            <h5 class="card-title">Premium</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">$40/month</h6>
+                            <h2 class="card-title">Premium</h2>
+                            <h3 class="card-subtitle mb-2 text-muted">$40/month</h3>
                             <p><i class="bi bi-check-circle-fill text-success"></i> 2 Hour Gym Access daily</p>
                             <p><i class="bi bi-check-circle-fill text-success"></i> Free Locker</p>
                             <p><i class="bi bi-check-circle-fill text-success"></i> Protein Shake</p>
@@ -156,8 +157,8 @@
                             <div class="card-header bg-success text-white text-center">Current Plan</div>
                         <?php endif; ?>
                         <div class="card-body text-center">
-                            <h5 class="card-title">Ultimate</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">$90/month</h6>
+                            <h2 class="card-title">Ultimate</h2>
+                            <h3 class="card-subtitle mb-2 text-muted">$90/month</h3>
                             <p><i class="bi bi-check-circle-fill text-success"></i> Unlimited Gym Access daily</p>
                             <p><i class="bi bi-check-circle-fill text-success"></i> Free Locker</p>
                             <p><i class="bi bi-check-circle-fill text-success"></i> Protein Shake</p>
