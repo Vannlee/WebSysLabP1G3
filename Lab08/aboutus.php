@@ -45,8 +45,8 @@
                     <div class="col-md-4">
                         <div class="card h-100 border-0 shadow-sm">
                             <div class="card-body text-center">
-                                <i class="bi bi-heart-fill text-danger fs-1 mb-3"></i>
-                                <h5 class="card-title">Health First</h5>
+                                <i class="bi bi-heart-fill text-danger fs-1 mb-3" aria-hidden="true"></i>
+                                <h3 class="card-title">Health First</h3>
                                 <p class="card-text">We prioritize your wellbeing above all else, focusing on safe, sustainable fitness practices.</p>
                             </div>
                         </div>
@@ -54,8 +54,8 @@
                     <div class="col-md-4">
                         <div class="card h-100 border-0 shadow-sm">
                             <div class="card-body text-center">
-                                <i class="bi bi-people-fill text-primary fs-1 mb-3"></i>
-                                <h5 class="card-title">Community</h5>
+                                <i class="bi bi-people-fill text-primary fs-1 mb-3" aria-hidden="true"></i>
+                                <h3 class="card-title">Community</h3>
                                 <p class="card-text">We foster a supportive community where members motivate each other to reach their goals.</p>
                             </div>
                         </div>
@@ -63,8 +63,8 @@
                     <div class="col-md-4">
                         <div class="card h-100 border-0 shadow-sm">
                             <div class="card-body text-center">
-                                <i class="bi bi-trophy-fill text-warning fs-1 mb-3"></i>
-                                <h5 class="card-title">Excellence</h5>
+                                <i class="bi bi-trophy-fill text-warning fs-1 mb-3" aria-hidden="true"></i>
+                                <h3 class="card-title">Excellence</h3>
                                 <p class="card-text">We continuously improve our facilities, programs, and services to exceed expectations.</p>
                             </div>
                         </div>
@@ -73,61 +73,61 @@
             </section>
             
             <!-- Meet Our Team Section -->
-            <section class="container my-5" id="ourteam">
-                <h2 class="text-center mb-4">Meet Our Team</h2>
-                <div class="row g-4 justify-content-center">
-                    <div class="col-md-6 col-lg-2">
-                        <div class="card h-100 shadow-sm">
-                            <img src="images/john.png" class="card-img-top" alt="Team member">
-                            <div class="card-body text-center">
-                                <h5 class="card-title">Ong Eugene</h5>
-                                <p class="card-subtitle text-muted mb-3">Founder & CEO</p>
-                                <p class="card-text">Certified fitness professional with 15+ years of experience in the industry.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-2">
-                        <div class="card h-100 shadow-sm">
-                            <img src="images/john.png" class="card-img-top" alt="Team member">
-                            <div class="card-body text-center">
-                                <h5 class="card-title">Ethan Tan E-Xin</h5>
-                                <p class="card-subtitle text-muted mb-3">Head Trainer</p>
-                                <p class="card-text">Specializes in strength training and nutritional coaching to maximize results.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-2">
-                        <div class="card h-100 shadow-sm">
-                            <img src="images/jovan.jpg" class="card-img-top" alt="Team member">
-                            <div class="card-body text-center">
-                                <h5 class="card-title">Jovan Lee Songying</h5>
-                                <p class="card-subtitle text-muted mb-3">Developer</p>
-                                <p class="card-text">"Sticks and Stones Break my Bones"</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-2">
-                        <div class="card h-100 shadow-sm">
-                            <img src="images/john.png" class="card-img-top" alt="Team member">
-                            <div class="card-body text-center">
-                                <h5 class="card-title">Ng Wei Qi</h5>
-                                <p class="card-subtitle text-muted mb-3">Wellness Coach</p>
-                                <p class="card-text">Focuses on holistic approaches to fitness, including yoga and meditation.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-2">
-                        <div class="card h-100 shadow-sm">
-                            <img src="images/john.png" class="card-img-top" alt="Team member">
-                            <div class="card-body text-center">
-                                <h5 class="card-title">Tan Zi Xu</h5>
-                                <p class="card-subtitle text-muted mb-3">Fitness Instructor</p>
-                                <p class="card-text">Expert in high-intensity interval training and group fitness classes.</p>
-                            </div>
-                        </div>
-                    </div>
+<section class="container my-5" id="ourteam">
+    <h2 class="text-center mb-4">Meet Our Team</h2>
+    <div class="row g-4 justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm">
+                <img src="images/john.png" class="card-img-top" alt="Team member">
+                <div class="card-body text-center">
+                    <h3 class="card-title">Ong Eugene</h3>
+                    <p class="card-subtitle text-dark mb-3">Student at SIT</p>
+                    <p class="card-text">Year 1 Information Security Student</p>
                 </div>
-            </section>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm">
+                <img src="images/john.png" class="card-img-top" alt="Team member">
+                <div class="card-body text-center">
+                    <h3 class="card-title">Ethan Tan E-Xin</h3>
+                    <p class="card-subtitle text-dark mb-3">Head Trainer</p>
+                    <p class="card-text">Specializes in strength training and nutritional coaching to maximize results.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm">
+                <img src="images/jovan.jpg" class="card-img-top" alt="Team member">
+                <div class="card-body text-center">
+                    <h3 class="card-title">Jovan Lee Songying</h3>
+                    <p class="card-subtitle text-dark mb-3">Developer</p>
+                    <p class="card-text">"Sticks and Stones Break my Bones"</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm">
+                <img src="images/john.png" class="card-img-top" alt="Team member">
+                <div class="card-body text-center">
+                    <h3 class="card-title">Ng Wei Qi</h3>
+                    <p class="card-subtitle text-dark mb-3">Wellness Coach</p>
+                    <p class="card-text">Focuses on holistic approaches to fitness, including yoga and meditation.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm">
+                <img src="images/john.png" class="card-img-top" alt="Team member">
+                <div class="card-body text-center">
+                    <h3 class="card-title">Tan Zi Xu</h3>
+                    <p class="card-subtitle text-dark mb-3">Fitness Instructor</p>
+                    <p class="card-text">Expert in high-intensity interval training and group fitness classes.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
             
             <!-- Facilities Section -->
             <section class="container my-5 bg-light p-5 rounded" id="facilities">
@@ -136,7 +136,7 @@
                     <div class="col-md-4">
                         <div class="card h-100 border-0 shadow-sm">
                             <div class="card-body">
-                                <h5 class="card-title">Modern Equipment</h5>
+                                <h3 class="card-title">Modern Equipment</h3>
                                 <p class="card-text">Our gym features the latest fitness technology and equipment to enhance your workout experience.</p>
                             </div>
                         </div>
@@ -144,7 +144,7 @@
                     <div class="col-md-4">
                         <div class="card h-100 border-0 shadow-sm">
                             <div class="card-body">
-                                <h5 class="card-title">Spacious Training Areas</h5>
+                                <h3 class="card-title">Spacious Training Areas</h3>
                                 <p class="card-text">Enjoy plenty of space for your workouts with dedicated zones for different training styles.</p>
                             </div>
                         </div>
@@ -152,7 +152,7 @@
                     <div class="col-md-4">
                         <div class="card h-100 border-0 shadow-sm">
                             <div class="card-body">
-                                <h5 class="card-title">VIP Lounge</h5>
+                                <h3 class="card-title">VIP Lounge</h3>
                                 <p class="card-text">Ultimate members can relax in our exclusive VIP area with premium amenities and services.</p>
                             </div>
                         </div>
@@ -171,8 +171,8 @@
                                 <div class="d-flex align-items-center mt-3">
                                     <img src="images/peter.png" class="rounded-circle me-3" width="50" height="50" alt="Member">
                                     <div>
-                                        <h6 class="mb-0">David Wilson</h6>
-                                        <small class="text-muted">Member since 2018</small>
+                                        <h3 class="mb-0">David Wilson</h3>
+                                        <small class="text-dark">Member since 2018</small>
                                     </div>
                                 </div>
                             </div>
@@ -185,8 +185,8 @@
                                 <div class="d-flex align-items-center mt-3">
                                     <img src="images/peter.png" class="rounded-circle me-3" width="50" height="50" alt="Member">
                                     <div>
-                                        <h6 class="mb-0">Lisa Thompson</h6>
-                                        <small class="text-muted">Member since 2020</small>
+                                        <h3 class="mb-0">Lisa Thompson</h3>
+                                        <small class="text-dark">Member since 2020</small>
                                     </div>
                                 </div>
                             </div>
