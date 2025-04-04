@@ -12,7 +12,6 @@
     <title>Login - GymBros</title>
     <?php
         include "inc/head.inc.php";
-        include "inc/enablejs.inc.php";
     ?>
     <link rel="stylesheet" href="css/login.css">
 </head>
@@ -20,6 +19,7 @@
 <body>
     <?php
         include "inc/nav.inc.php";
+        include "inc/enablejs.inc.php";
     ?>
     
     <main class="container login-container">
