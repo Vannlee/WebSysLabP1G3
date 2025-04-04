@@ -44,6 +44,7 @@
                 exit();
             }
             else {
+                echo "<html lang='en'>";
                 include "inc/head.inc.php";
                 include "inc/nav.inc.php";
 

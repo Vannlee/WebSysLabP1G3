@@ -210,7 +210,7 @@ function getMembershipName($price) {
                 </form>
                 
                 <div class="danger-zone mt-5">
-                    <h4 class="text-danger"><i class="bi bi-exclamation-triangle-fill"></i> Danger Zone</h4>
+                    <h2 class="text-danger"><i class="bi bi-exclamation-triangle-fill"></i> Danger Zone</h2>
                     <p>Once you delete your account, there is no going back. Please be certain.</p>
                     
                     <form id="delete-form" action="process_profile.php" method="post" onsubmit="return confirm('Are you sure you want to delete your profile? This action cannot be undone.');">
@@ -231,7 +231,7 @@ function getMembershipName($price) {
             <div class="tab-pane fade" id="membership" role="tabpanel" aria-labelledby="membership-tab">
                 <div class="d-flex align-items-center mb-4">
                     <div>
-                        <h4 class="mb-1">Current Plan: <span class="text-<?php echo $membershipColor; ?>"><?php echo htmlspecialchars($membershipName); ?></span></h4>
+                        <h2 class="mb-1">Current Plan: <span class="text-<?php echo $membershipColor; ?>"><?php echo htmlspecialchars($membershipName); ?></span></h2>
                         <p class="text-muted mb-0">Member since <?php echo $formattedDate; ?></p>
                     </div>
                     <a href="membership.php" class="btn btn-primary ms-auto">Upgrade Membership</a>
@@ -239,7 +239,7 @@ function getMembershipName($price) {
                 
                 <div class="card mb-4">
                     <div class="card-header">
-                        <h5 class="mb-0">Membership Benefits</h5>
+                        <h3 class="mb-0">Membership Benefits</h3>
                     </div>
                     <div class="card-body">
                         <?php if ($user['membership'] == 'Basic'): ?>
@@ -274,7 +274,7 @@ function getMembershipName($price) {
             
             <!-- Transactions Tab -->
             <div class="tab-pane fade" id="transactions" role="tabpanel" aria-labelledby="transactions-tab">
-                <h4 class="mb-4">Purchase History</h4>
+                <h2 class="mb-4">Purchase History</h2>
                 
                 <?php if (count($transactions) > 0): ?>
                     <div class="table-responsive">

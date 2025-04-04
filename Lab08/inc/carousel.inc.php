@@ -1,5 +1,5 @@
 <!-- Membership Carousel -->
-<section role="region" aria-label="Membership Options Carousel">
+<section aria-label="Membership Options Carousel">
   <div id="gymCarousel" class="carousel slide" data-bs-ride="carousel">
     <!-- Carousel Inner -->
     <div class="carousel-inner">
@@ -9,7 +9,7 @@
           <img src="images/basic_membership.png" class="d-block w-100" alt="Basic Membership">
         </a>
         <div class="carousel-caption d-none d-md-block">
-          <h5>Basic Membership</h5>
+          <h1>Basic Membership</h1>
           <p>Access to basic booking services and gym equipment.</p>
         </div>
       </div>
@@ -20,7 +20,7 @@
           <img src="images/premium_membership.jpg" class="d-block w-100" alt="Premium Membership">
         </a>
         <div class="carousel-caption d-none d-md-block">
-          <h5>Premium Membership</h5>
+          <h1>Premium Membership</h1>
           <p>Access to basic booking services, gym equipment and group fitness classes.</p>
         </div>
       </div>
@@ -31,7 +31,7 @@
           <img src="images/supreme_membership.jpg" class="d-block w-100" alt="Ultimate Membership">
         </a>
         <div class="carousel-caption d-none d-md-block">
-          <h5>Ultimate Membership</h5>
+          <h1>Ultimate Membership</h1>
           <p>Access to basic booking services, gym equipment, group fitness classes and instructor bookings.</p>
         </div>
       </div>

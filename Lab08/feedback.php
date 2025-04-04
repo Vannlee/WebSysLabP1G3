@@ -46,7 +46,7 @@
             include "inc/enablejs.inc.php";         
         ?>
         <main class="container">
-            <h2>My Membership Feedback Records</h2>
+            <h1 style = "h2">My Membership Feedback Records</h1>
             <?php 
                 getFeedbackRecords();
             ?>
@@ -104,7 +104,7 @@
                       </div>';
             }
             else {
-                echo '<h5>No Membership Feedback records found</h5>';
+                echo '<div class="alert alert-info">No Membership Feedback records found</div>';
             }
 
             $stmt->close();

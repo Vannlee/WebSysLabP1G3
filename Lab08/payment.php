@@ -169,7 +169,7 @@
             <div class="col-md-8">
                 <div class="card shadow">
                     <div class="card-header bg-primary text-white">
-                        <h3 class="mb-0">Payment Details</h3>
+                        <h1 class="mb-0">Payment Details</h1>
                     </div>
                     <div class="card-body">
                         <?php if (!empty($errors)): ?>
@@ -183,7 +183,7 @@
                         <?php endif; ?>
                         
                         <div class="mb-4">
-                            <h5>Order Summary</h5>
+                            <h2>Order Summary</h2>
                             <div class="d-flex justify-content-between">
                                 <span>Current Plan:</span>
                                 <span><?php echo htmlspecialchars($memberships[$currentMembership]['name']); ?></span>

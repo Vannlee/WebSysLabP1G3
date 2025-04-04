@@ -39,7 +39,7 @@
         
         <div class="login-card">
             <div class="login-header">
-                <h2 class="mb-0 text-center">Welcome Back!</h2>
+                <h1 class="mb-0 text-center">Welcome Back!</h1>
             </div>
             
             <div class="login-body">
@@ -78,7 +78,7 @@
             </div>
             
             <div class="login-footer">
-                <p class="mb-0">Don't have an account? <a href="register.php" class="text-decoration-none">Sign up now</a></p>
+                <p class="mb-0">Don't have an account? <a href="register.php">Sign up now</a></p>
             </div>
         </div>
     </main>
