@@ -50,6 +50,9 @@ figcaption{
     color: red; 
     font-weight: bold;
 }
+.modal-title {
+    color: white;
+}
 
 .modal-content {
     background-image: url('../images/modal_background.jpg');
