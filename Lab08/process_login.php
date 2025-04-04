@@ -7,7 +7,7 @@ error_reporting(0);
 ini_set('display_errors', 0);
 
 // Check if the user is logged in. If not, redirect to login page
-if (!isset($_SESSION['user_id'])) {
+if (isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit;
 }
