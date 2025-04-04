@@ -44,10 +44,6 @@ figcaption{
     z-index: 1000;
 }
 
-#main-content {
-    display: none !important;
-}
-
 .enable-js {
     text-align: center; 
     padding: 2rem; 
