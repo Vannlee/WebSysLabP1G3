@@ -6,9 +6,12 @@ session_start();
 error_reporting(0);
 ini_set('display_errors', 0);
 
-include "inc/head.inc.php";
-include "inc/nav.inc.php";
-
+// Check if the user is logged in. If not, redirect to login page
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit;
+}
+// Move HTML output to after PHP processing
 $errorMsg = "";
 $success = true;
 
@@ -37,22 +40,6 @@ $remember = isset($_POST["remember"]) ? true : false;
 
 if ($success) {
     authenticateUser();
-}
-
-// Display login results
-if ($success) {
-    echo "<title>Login Successful</title>";
-    echo "<main class='container'>";
-    echo "<h3>Login successful!</h3>";
-    echo "<h4>Welcome back, " . htmlspecialchars($fname) . " " . htmlspecialchars($lname) . ".</h4>";
-    echo "<p><a class='btn btn-success' href='index.php'>Return to Home</a></p></main>";
-} else {
-    echo "<title>Login Failed</title>";
-    echo "<main class='container'>";
-    echo "<h3>Login Failed</h3>";
-    echo "<h4>The following input errors were detected:</h4>";
-    echo "<p>" . $errorMsg . "</p>";
-    echo "<p><a class='btn btn-warning' href='login.php'>Return to Login</a></p></main>";
 }
 
 /**
@@ -123,5 +110,33 @@ function authenticateUser() {
     $conn->close();
 }
 
-include "inc/footer.inc.php";
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title><?php echo $success ? "Login Successful" : "Login Failed"; ?></title>
+    <?php include "inc/head.inc.php"; ?>
+</head>
+<body>
+    <?php include "inc/nav.inc.php"; ?>
+    
+    <main class="container">
+        <?php
+        // Display login results
+        
+        if ($success) {
+            echo "<h1>Login successful!</h1>";
+            echo "<h2>Welcome back, " . htmlspecialchars($fname) . " " . htmlspecialchars($lname) . ".</h2>";
+            echo "<p><a class='btn btn-success' href='index.php'>Return to Home</a></p>";
+        } else {
+            echo "<h1>Login Failed</h1>";
+            echo "<h2>The following input errors were detected:</h2>";
+            echo "<p>" . $errorMsg . "</p>";
+            echo "<p><a class='btn btn-warning' href='login.php'>Return to Login</a></p>";
+        }
+        ?>
+    </main>
+    
+    <?php include "inc/footer.inc.php"; ?>
+</body>
+</html>
