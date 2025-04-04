@@ -3,9 +3,6 @@ session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-include "inc/head.inc.php";
-include "inc/nav.inc.php";
-
 $errorMsg = "";
 $success = true;
 
@@ -33,25 +30,6 @@ if (empty($_POST["feedback_content"])) {
 // If validation is successful, register the user
 if ($success) {
     submitFeedback();
-}
-
-// Display success or error message
-if ($success) {
-    echo "<title>Feedback Success</title>";
-    echo "<main class='container'>";
-    echo "<div class='alert alert-secondary mt-4'>";
-    echo "<h3>Thank You for Your Feedback</h3>";
-    echo "<p>We hope you have a nice day!</p>";
-    echo "</div>";
-    echo "<p><a class='btn btn-success' href='index.php'>Back to Homepage</a></p></main>";
-} else {
-    echo "<title>Feedback Error</title>";
-    echo "<main class='container'>";
-    echo "<div class='alert alert-secondary mt-4'>";
-    echo "<h3>Oops! Kindly resolve the following:</h3>";
-    echo "<p>Error: </h4><p>" . $errorMsg . "</p>";
-    echo "</div>";
-    echo "<p><a class='btn btn-warning' href='leave_feedback.php'>Try Again</a></p></main>";
 }
 
 /**
@@ -91,6 +69,35 @@ function submitFeedback() {
     $stmt->close();
     $conn->close();
 }
-
-include "inc/footer.inc.php";
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title><?php echo $success ? "Feedback Success" : "Feedback Error"; ?></title>
+    <?php include "inc/head.inc.php"; ?>
+    </head>
+<body>
+    <?php include "inc/nav.inc.php"; ?>
+    
+    <main class="container">
+        <?php
+        if ($success) {
+            echo "<div class='alert alert-secondary mt-4'>";
+            echo "<h1>Thank You for Your Feedback</h1>";
+            echo "<p>We hope you have a nice day!</p>";
+            echo "</div>";
+            echo "<p><a class='btn btn-success' href='index.php'>Back to Homepage</a></p>";
+        }
+        else {
+            echo "<div class='alert alert-secondary mt-4'>";
+            echo "<h1>Oops!</h1>";
+            echo "<p>Error: </h4><p>" . $errorMsg . "</p>";
+            echo "</div>";
+            echo "<p><a class='btn btn-warning' href='leave_feedback.php'>Try Again</a></p>";
+        }
+        ?>
+    </main>
+    <?php include "inc/footer.inc.php"; ?>
+</body>
+</html>
