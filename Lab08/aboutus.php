@@ -78,7 +78,7 @@
     <div class="row g-4 justify-content-center">
         <div class="col-md-6 col-lg-4">
             <div class="card h-100 shadow-sm">
-                <img src="images/john.png" class="card-img-top" alt="Team member">
+                <img src="images/eugene.jpg" class="card-img-top" alt="Team member">
                 <div class="card-body text-center">
                     <h3 class="card-title">Ong Eugene</h3>
                     <p class="card-subtitle text-dark mb-3">Student at SIT</p>
