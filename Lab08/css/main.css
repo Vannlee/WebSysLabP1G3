@@ -44,6 +44,17 @@ figcaption{
     z-index: 1000;
 }
 
+#main-content {
+    display: none !important;
+}
+
+.enable-js {
+    text-align: center; 
+    padding: 2rem; 
+    color: red; 
+    font-weight: bold;
+}
+
 .modal-content {
     background-image: url('../images/modal_background.jpg');
     background-size: cover;

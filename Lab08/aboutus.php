@@ -7,12 +7,12 @@
         <title>About Us - Gymbros</title>
         <?php
             include "inc/head.inc.php";
-            include "inc/enablejs.inc.php";
         ?>
     </head>
     <body>
         <?php
             include "inc/nav.inc.php";
+            include "inc/enablejs.inc.php";
         ?>
 
         <main class="container">

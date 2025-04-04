@@ -119,7 +119,6 @@ usort($afternoon_slots, function($a, $b) {
         <title>Fitness Gym - Timetable</title>
         <?php
             include "inc/head.inc.php";
-            include "inc/enablejs.inc.php";
         ?>
         <style>
             table { width: 100%; border-collapse: collapse; margin-top: 20px; }
@@ -138,7 +137,9 @@ usort($afternoon_slots, function($a, $b) {
         </script>
     </head>
     <body>
-        <?php include "inc/nav.inc.php"; ?>
+        <?php include "inc/nav.inc.php"; 
+        include "inc/enablejs.inc.php";
+        ?>
         <main class="container">
         <h1>Gym Timetable</h1>
         

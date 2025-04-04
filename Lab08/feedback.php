@@ -38,12 +38,12 @@
         <meta name="description" content="Gymbros - Feedback Page"/>
         <?php
             include "inc/head.inc.php";
-            include "inc/enablejs.inc.php";
         ?>
     </head>
     <body>
         <?php
-            include "inc/nav.inc.php";            
+            include "inc/nav.inc.php";   
+            include "inc/enablejs.inc.php";         
         ?>
         <main class="container">
             <h2>My Membership Feedback Records</h2>

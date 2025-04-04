@@ -12,12 +12,12 @@
         <title>Leave a Feedback - Gymbros</title>
         <?php
             include "inc/head.inc.php";
-            include "inc/enablejs.inc.php";
         ?>
     </head>
     <body>
         <?php
             include "inc/nav.inc.php";
+            include "inc/enablejs.inc.php";
         ?>
         <main class="container">
             <form action="process_feedback.php" method="post">
