@@ -27,12 +27,16 @@
             exit();
     }
     
+    // Start building the HTML response
+    $pageTitle = ""; // Will be set based on outcome
+    $contentHTML = ""; // Will contain the main content
+    
     if (isset($_GET['id']) && isLoggedIn()) {
         // User is logged in and feedback id to be deleted is present
         $f_id = $_GET['id'];
 
         $stmt = $conn->prepare("SELECT member_id FROM Gymbros.membership_feedback WHERE feedback_id = ?");
-        $stmt->bind_param("i",  $f_id);
+        $stmt->bind_param("i", $f_id);
         $stmt->execute();
         $result = $stmt->get_result();
                 
@@ -49,44 +53,51 @@
                 $deleteStmt->bind_param("i", $f_id);
 
                 if ($deleteStmt->execute()) {
-                    include "inc/head.inc.php";
-                    include "inc/nav.inc.php";
-
-                    echo "<title>Delete Success</title>";
-                    echo "<main class='container'>";
-                    echo '<div class="alert alert-success mt-4">
+                    $pageTitle = "Delete Success";
+                    $contentHTML = '<div class="alert alert-success mt-4">
                             <h1>Feedback Successfully Deleted</h1>
                             <p>Your feedback record has been removed.</p>
                             <a href="feedback.php" class="btn btn-sm btn-primary action-btn">Return to Feedback Records</a>
-                          </div></main>';
+                          </div>';
                 }
                 else {
-                    echo "<title>Delete Failed</title>";
-                    echo "<main class='container'>";
-                    echo '<div class="alert alert-danger mt-4">
+                    $pageTitle = "Delete Failed";
+                    $contentHTML = '<div class="alert alert-danger mt-4">
                             <h1>Delete was Unsuccessful</h1>
                             <p>Kindly return to the Feedback Records page and try again</p>
                             <a href="feedback.php" class="btn btn-sm btn-primary action-btn">Return to Feedback Records</a>
-                        </div></main>';
+                        </div>';
                 }
             }
         }
         else {
-            include "inc/head.inc.php";
-            include "inc/nav.inc.php";
-            
-            echo "<title>No Record Found</title>";
-            echo "<main class='container'>";
-            echo "<div class='alert alert-danger mt-4'>";
-            echo "<h3>No Feedback Record Found</h3>";
-            echo "<p>This is no such record for this feedback, kindly return to the feedback page and try again.</p>";
-            echo "</div>";
-            echo "<p><a class='btn btn-primary' href='feedback.php'>Back to Feedback Records</a></p></main>";
+            $pageTitle = "No Record Found";
+            $contentHTML = '<div class="alert alert-danger mt-4">
+                <h1>No Feedback Record Found</h1>
+                <p>This is no such record for this feedback, kindly return to the feedback page and try again.</p>
+                <a href="feedback.php" class="btn btn-primary">Back to Feedback Records</a>
+            </div>';
         }
         
         $stmt->close();
         $conn->close();
     }
-
-    include "inc/footer.inc.php";
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo $pageTitle; ?></title>
+    <?php include "inc/head.inc.php"; ?>
+</head>
+<body>
+    <?php include "inc/nav.inc.php"; ?>
+    
+    <main class="container">
+        <?php echo $contentHTML; ?>
+    </main>
+    
+    <?php include "inc/footer.inc.php"; ?>
+</body>
+</html>
