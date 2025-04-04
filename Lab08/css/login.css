@@ -27,6 +27,9 @@
     padding: 20px;
     border-top: 1px solid #eee;
     text-align: center;
+}
+
+.login-footer a {
     color: #084298;
     text-decoration: underline;
     font-weight: 500;
@@ -49,6 +52,10 @@
 
 .password-toggle:hover {
     color: #212529; 
+}
+
+.accessible-link:hover {
+    color: #052c65;
 }
 
 .form-control {
