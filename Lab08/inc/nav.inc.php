@@ -3,31 +3,6 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 ?>
-<style>
-    /* Improved contrast for navigation links */
-    .nav-link {
-        color: #ffffff;
-        font-weight: 500; /* Adding slightly bolder font for better readability */
-    }
-    /* Improved contrast for dropdown items */
-    .dropdown-item:focus, .dropdown-item:hover {
-        background-color: #0d6efd;
-        color: white;
-    }
-    /* Ensure hamburger icon is visible */
-    .navbar-toggler-icon {
-        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-    }
-    /* Enhanced sign-up button for better contrast */
-    .signup-btn {
-        background-color: #0d6efd;
-        color: white;
-    }
-    .signup-btn:hover, .signup-btn:focus {
-        background-color: white;
-        color: white;
-    }
-</style>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
@@ -73,7 +48,7 @@ if (session_status() === PHP_SESSION_NONE) {
                         <a class="nav-link" href="login.php">Login</a>
                     </li>
                     <li class="nav-item">
-                        <a class="btn signup-btn" href="register.php" role="button">Sign Up</a>
+                        <a class="btn btn-primary" href="register.php" role="button">Sign Up</a>
                     </li>
                 <?php else: ?>
                     <!-- Logged-in user view -->
