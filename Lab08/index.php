@@ -120,15 +120,13 @@
                 $greeting = "Good evening";
                 }
 
-                echo '<div class="welcome-jumbotron text-center fade-in">
-                <div class="container">
-                    <h1 class="display-4">' . $greeting . ', <span class="text-warning">' . htmlspecialchars($fname) . '</span>!</h1>
-                    <p class="lead">Ready to crush your fitness goals today?</p>
-                    <hr class="my-4 bg-light">
+                echo '<header class="welcome-jumbotron text-center fade-in" role="banner">
+                    <div class="container">
+                        <h1 class="display-4">' . $greeting . ', <span class="text-warning">' . htmlspecialchars($fname) . '</span>!</h1>
+                        <p class="lead">Ready to crush your fitness goals today?</p>
+                        <hr class="my-4 bg-light">
                     </div>
-                </div>
-            </div>';
-
+                </header>';
             }
         }
     ?>
